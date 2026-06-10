@@ -1,0 +1,39 @@
+##  I
+- types of market
+	- direct search; brokered market; dealer markets; auction markets
+	- bid price买; ask price
+- typys of orders
+	- market order; price contingent order; a large order may be filled at multiple prices
+	- price-contingent orders
+		- limit-buy order: 价格很低的时候买入; 做空止盈
+		- stop-buy order: 价格很高的时候买入; 做空止损
+		- stop-loss order: 价格很低的时候卖出; 做多止损
+		- limit-sell order: 价格很高的时候卖出; 做多止盈
+- trading costs
+	- Brokerage Commission: Fee paid to broker for making the transaction
+	- Spread: Difference between the bid and asked prices
+- buying on margin
+	- Borrowing part of the total purchase price of a position using a loan from a broker
+
+## II
+- liquidity: ability to buy or sell significant quantities of a security quickly and with minimal or no price impact
+	- An asset with lower bid-ask spread is more liquid.
+	- sources of illiquidity
+		- transaction costs
+		- price pressure and inventory risks
+		- high costs implies less liquidity
+		- asymmetric information
+		- search friction
+	- Amihud-Mendelson (1986): clientele effect
+		- short-horizon investors hold lowest $C\setminus P$ assets
+		- long-horizon investors hold highest $C\setminus P$ (illiquid) assets and  equire a liquidity premium
+- time-varying transaction cost
+	- 4$\beta$ 
+- 流动性的实证度量
+	- 交易量指标：turnover
+	- 买卖价差: the bid-ask spread
+	- 价格冲击系数: Kyle's lambda $\Delta p_{t}=a+\lambda q_{t}+\varepsilon _{t}$
+	- 非流动性比率: $Illq_{i,t}=(1/N_{il})\sum_{d}(|r_{i,d}|/vol_{i,d})$
+	- 零收益率天数
+	- Prediction: Illiquidity and Expected returns
+		- In equilibrium, less liquid assets are allocated to investors with longer holding periods (more patient investors), which mitigates the compensation required for illiquidity costs

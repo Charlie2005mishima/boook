@@ -1,4 +1,6 @@
 [
   "obsidian-latex-suite",
-  "obsidian-style-settings"
+  "obsidian-style-settings",
+  "obsidian-export-to-tex",
+  "obsidian-git"
 ]

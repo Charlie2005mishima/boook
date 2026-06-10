@@ -1,42 +1,18 @@
 # Math
 - [[实变函数与泛函分析]]
-- [[常微分]]
-- [[概率论]]
-- [[数理统计]]
-- [[统计学习]]
+- [[实变函数 chap1 集合与实数集]] && [[实变函数题集]]
+- [[常微分_2025fw_贾]] 
+- [[概率论_2025fw_庞]]
+- [[数理统计_2026ss_黄]] && [[数理统计题集]]
+- [[统计学习_2026ss_崔]]
 
 # Finance
-### Micro
-
-### Macro
-
-### Quant
-
-### Corporate Finance
-- Accounting
-	- [[中级财务会计]]
-- International Finance
-	- [[国际金融学]]
-### Econometrics
+- [[中级财务会计_2026ss_张]]
 - [[计量经济学 25fall 孔]]
-- [[STATA命令]]
-- 高级计量经济学_陈
-### Investment
-- Investment
-	- [[投资学]]
-- Asset Pricing
-- Derivation
-	- [[期货市场 25fall 张]]
-### Market&Institution
-- 投行
-
-# Coding
-### Markdown
-
+- [[投资学_2026ss_任]]
+- [[期货市场 25fall 张]]
+、
 # English
 
-
-
 # LTL
-- [[心流]]
-- 
+

@@ -8,6 +8,8 @@
     "pageSize": "A4",
     "landscape": false,
     "margin": "0",
-    "downscalePercent": 100
-  }
+    "downscalePercent": 90
+  },
+  "alwaysUpdateLinks": true,
+  "attachmentFolderPath": "Finance\\Macro\\国际金融学_2026ss_周\\图片"
 }

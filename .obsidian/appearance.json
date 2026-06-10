@@ -1,7 +1,9 @@
 {
-  "accentColor": "#79a082",
-  "baseFontSize": 16,
-  "cssTheme": "Blue Topaz",
-  "textFontFamily": "华文宋体",
-  "interfaceFontFamily": "方正仿宋简体"
+  "accentColor": "#063c93",
+  "baseFontSize": 14,
+  "cssTheme": "Tokyo Night",
+  "textFontFamily": "方正楷体简体",
+  "interfaceFontFamily": "方正楷体简体",
+  "baseFontSizeAction": true,
+  "theme": "obsidian"
 }

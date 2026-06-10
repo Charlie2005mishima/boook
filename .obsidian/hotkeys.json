@@ -1,0 +1,11 @@
+{
+  "obsidian-export-to-tex:export-to-tex": [
+    {
+      "modifiers": [
+        "Alt",
+        "Mod"
+      ],
+      "key": "T"
+    }
+  ]
+}
