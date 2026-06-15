@@ -1,0 +1,7 @@
+# Ignore everything at root
+/*
+# Except these folders
+!/Finance/
+!/Math/
+# Track the gitignore itself
+!/.gitignore

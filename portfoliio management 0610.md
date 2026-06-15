@@ -1,1 +1,0 @@
-$\text{sharpe ratio}_{p}=\frac{\text{Arith Mean }R_{p}}{}$

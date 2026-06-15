@@ -22,7 +22,7 @@
 		- The changes in assets will automatically cause equal changes in the liabilities.
 - Money Supply
 	- M0 = Currency + Reserves
-	- The central bank buys an asset >> the central bank’s liabilities↑ >> Money Supply↑
+	- The central bank buys an asset >> the central bank's liabilities↑ >> Money Supply↑
 	- The central bank sales an asset >> Money Supply↓
 
 ### Sterilized
@@ -46,7 +46,7 @@
 - Money Market Equilibrium
 	- Keep R to be equal to R*
 	- $M^s/P=L(R^*,Y)$ 
-	- If Y↑ (a positive real shock) >> L↑ >> upward pressure on R >> Suppose $E^0$ does not change >> appreciation pressure on domestic currency >> CB has to buy foreign assets >> Domestic money supply increases
+	- If Y↑ (a positive real shock) >> L↑ >> upward pressure on R >> Suppose $E^0$ does not change >> appreciation pressure on domestic currency >> CB has to buy foreign assets >> Domestic money supply increases >> by fixing the exchange rate, CB gives up its ability to influence the economy through monetary pilicy.
 
 ![[国金-18.1.png|300]]
 
@@ -67,7 +67,7 @@
 - Why governments sometimes choose to devalue their currencies? 
 	- Against unemployment, when fiscal policy is infeasible 
 	- Improve current account 
-	- Increase the CB’s foreign reserves
+	- Increase the CB's foreign reserves
 
 ### adjustment to permanent fiscal policy
 
@@ -75,6 +75,9 @@
 - Permanent G↑ >> D↑; Y↑ >> P↑ >> D↓ >> Y ↘ Yf  >> P stops rising
 	- Short run: home currency does not real appreciate
 	- Long run: home currency does real appreciate because of the increase of price level
+
+### adjustment to exchange rate changes
+
 - Devaluation
 	- Devaluation does not change the long-run output demand and supply.
 	- The long-run price level increases proportionally to the increase of exchange rate.
@@ -93,10 +96,12 @@
 	- The exchange rate is fixed at E0
 	- A sudden CA ↓>>  $E^e$↑= E1
 	- The expected return rate of foreign currency deposit is higher than that of home currency
-	- Depreciation pressure of home currency
-	- CB has to sell out foreign assets for home currency： M1↘M2
+	- Depreciation pressure of home currency, CB has to sell out foreign assets for home currency： M1↘M2
+	- 贬值预期导致货币量减少，利率推高：资本出逃
 - Capital Flight
 	- with the fall of foreign reserves and the devaluation scare, the private capital outflow, i.e., residents sell home currency to the CB for foreign currency, then invest abroad.
+- Self-fulfilling Currency Crises
+	- suspect a devaluation >> R++ >> Y-- >> loans tend to be unpaid >> assets of banks-- >> selling foreign reserves
 
 ![[Pasted image 20260423153657.png|300]]
 
@@ -104,19 +109,21 @@
 
 ### 资产完全替代和冲销性干预的无效性
 
+资本的完全替代 prefect asset substitutability：本币债券和外币债券的预期收益率一致，反之则为资本的不完全替代，例如风险
 ### 资产不完全替代情况下的外汇市场均衡
 
-风险升水：$\rho$ 
+风险升水risk premium：$\rho$ 
 改进模型：$R=R^*+(E^e-E)/E+\rho$ 
 风险升水与 (本国政府债券存量B-中央银行持有的国内资产A) 成正比：$\rho=\rho(B-A)$ 
 ### 资产不完全替代情况下冲销性干预的影响
 
 ![[Pasted image 20260507100142.png|300]]
-
+通过购买外汇进行冲销性干预Sterilized Intervention，不再是没有影响的，相反会引起本币的贬值
+外汇干预的信号效应：冲销性干预可能会给出央行的期望或意愿汇率朝某个方向变动
 ## Reserve Currencies in the World Monetary System
 
 储备货币reserve currency
-金本位制 gold standard
+金本位制 gold standard 黄金作为官方储备
 
 ### 储备货币本位制的运行机制
 
@@ -137,7 +144,7 @@
 
 ### 复本位制
 
-复本位制 bimetallic stardard
+复本位制 bimetallic stardard：货币同时以金银作为基础
 
 ### 金汇兑本位制
 

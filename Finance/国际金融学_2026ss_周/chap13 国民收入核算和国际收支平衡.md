@@ -32,7 +32,10 @@ $Y<C+I+G,CA<0$：国内产出小于国内消费，出口小于进口，经常账
 开放经济：$S=I+CA\implies CA=S-I$ 
 经常账户长期盈余就会导致外汇储备大量提升
 current account deficit implies a funds inflow by borrowing or negative net foreign investment.
-
+- 经常账户（CA）
+    - 净出口（货物与服务）
+    - 净收入（Primary Income）：如海外投资利润、利息、雇员报酬
+    - 净单边转移（Secondary Income）：如侨汇、对外援助、捐赠
 ### 私人储蓄和政府储蓄
 
 私人储蓄：$S^p=Y-T-C$
