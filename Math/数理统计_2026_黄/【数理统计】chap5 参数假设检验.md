@@ -40,3 +40,23 @@ $\varphi(\tilde{x})=\begin{cases}1, & \tilde{x}\in D \\ 0, & \tilde{x}\in\bar{D}
 
 ## 5.3 假设检验与区间估计 
 
+## 5.4 广义似然比检验
+
+### 1 广义似然比检验
+
+**※【定义】** 广义似然比
+$\lambda(\tilde{x})=\frac{\sup_{\theta\in\Theta}L(\theta;\tilde{x})}{\sup_{\theta\in\Theta_{0}}L(\theta;\tilde{x})}=\frac{L(\hat{\theta};\tilde{x})}{L(\hat{\theta_{0}};\tilde{x})}$ 
+
+###  2 分布的似然比检验
+
+$H_{0}:p(x;\theta)=p_{0}(x;\theta)\leftrightarrow H_{1}:p(x;\theta)=p_{1}(x;\theta)$ 
+
+### 3 大样本似然比检验
+
+**※【定理】** LRT的渐近分布，简单原假设情形
+$H_{0}:\theta=\theta_{0}\leftrightarrow H_{1}:\theta\not=\theta_{0}$，当$p(x;\theta)$满足适当的正则条件，
+则在$H_{0}$下，$2\log\lambda(\tilde{X}) \stackrel{ D}{ \longrightarrow}\chi^{2}(1).n\to \infty$ 
+
+**※【定理】** LRT的渐近分布，复杂原假设情形
+$H_{0}:\theta\in\Theta_{0}\leftrightarrow H_{1}:\theta\not\in\Theta_{0}$，当$p(x;\theta)$满足适当的正则条件，
+则在$H_{0}$下，$2\log\lambda(\tilde{X}) \stackrel{ D}{ \longrightarrow}\chi^{2}(\upsilon).n\to \infty$ ，其中$\upsilon=\dim\Theta-\dim\Theta_{0}$ 
