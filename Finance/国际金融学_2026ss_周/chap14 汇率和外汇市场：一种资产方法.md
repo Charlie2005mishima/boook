@@ -4,12 +4,11 @@
 直接标价 direct term: domestic currency per unit of foreign currency: $0.01/￥1
 间接标价 indirect term: foreign currency per unit of foreign currency: ￥100/$1
 
-### 国内价格和国外价格
-
 贬值 depreciation: a decrease in the value of a currency relative to another >> more expensive imports, easier exports
 升值 appreciation >> cheaper imports, harder exports
 
-
+A depreciated currency means that imports are more expensive and domestically produced goods and exports are less expensive. 
+A depreciated currency lowers the price of exports relative to the price of imports.
 ## 外汇市场
 
 ### 参与者
@@ -24,8 +23,8 @@ dollar >> vehicle currency: one currency that is widely used to denominate inter
 
 ### 外汇市场的特征
 
-1. 金融中心一体化
-2. 无套利
+1. 金融中心一体化 The integration of markets
+2. 无套利 no significant arbitrage
 3. 美元 载体货币：在发行该种货币意外国家的国际交易中北广泛作为度量标准的货币（美元）
 
 ### 即期汇率和远期汇率
@@ -36,17 +35,18 @@ dollar >> vehicle currency: one currency that is widely used to denominate inter
 
 ### 外汇掉期交易 期货与期权
 
-foreign exchange swaps
-futures contracts
-option contracts
+- foreign exchange swaps: a combination of a spot sale with a forward repurchase.
+- futures contracts: a contract designed by a third party for a standard amount of foreign currency delivered/received on a standard date.
+- option contracts: a contract designed by a third party for a standard amount of foreign currency delivered/received on or before a standard date at a specified price.
 
 ## 外汇资产需求
-
-资产收益：收益率 rate of return 实际收益率 real rate of return
-
-$R^*+(E^e-E)/E=R$  
-
-贬值>>E变大>>R变小（贬值>>钱变便宜了）
+- factors of return
+	- risk of holding assets also influences decisions about whether to buy them.
+	- liquidity of an asset, or ease of using the asset to buy goods and services, also influences the willingness to buy assets.
+	- Because trading of deposits in different currencies occurs on a daily basis, we often assume that prices do not change from day to day.
+- 资产收益：收益率 rate of return 实际收益率 real rate of return
+- interest parity: $R^*+(E^e-E)/E=R$  
+- 贬值>>E变大>>R变小（贬值>>钱变便宜了）
 
 ## 外汇市场均衡
 
@@ -55,8 +55,8 @@ $R^*+(E^e-E)/E=R$
 利率平价条件 interest parity condition：用相同货币衡量任意两种货币存款的预期收益率相等的条件
 
 $R_{1}=R_{2}+(E_{1/2}^e-E_{1 /2}) /E_{1 /2}$ 
-- Depreciation of the domestic currency today lowers the expected rate of return on foreign currency deposits. >> 建仓成本下降
-- Appreciation of the domestic currency today raises the expected return of deposits on foreign currency deposits. >> 建仓成本抬升
+- Depreciation of the domestic currency today lowers the expected rate of return on foreign currency deposits. >> 建仓成本抬升
+- Appreciation of the domestic currency today raises the expected return of deposits on foreign currency deposits. >> 建仓成本下降
 
 ![[Pasted image 20260507144120.png|300]]
 ![[Pasted image 20260507144134.png|300]]
@@ -73,5 +73,9 @@ $R_{1}=R_{2}+(E_{1/2}^e-E_{1 /2}) /E_{1 /2}$
 	- An expected depreciation of a currency leads to an actual depreciation
 
 - covered interest parity: $R_{1}=R_{2}+(F_{1/2}-E_{1 /2}) /E_{1 /2}$ 
-- carry trade: borrow low-interest currencies, and buy high-interest currencies; profitable for long periods
-	- the risk and liquidity factors
+	- $F_{1/2}$: the forward exchange rate
+- **carry trade**: borrow low-interest currencies, and buy high-interest currencies; profitable for long periods
+	- the interest parity does not hold exactly: the risk and liquidity factors
+	- One important hazard of the carry trade: the investment currencies may abrupt crash.
+
+

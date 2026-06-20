@@ -25,7 +25,7 @@
 	- The central bank buys an asset >> the central bank's liabilities↑ >> Money Supply↑
 	- The central bank sales an asset >> Money Supply↓
 
-### Sterilized
+### Sterilization
 
 - Sterilized Foreign Exchange Intervention
 	- the central bank carry out equal foreign and domestic asset transaction in opposite directions to nullify the impact of their foreign exchange rate operations on domestic money supply
@@ -108,7 +108,7 @@
 ## Managed Floating and Sterilized Intervention
 
 ### 资产完全替代和冲销性干预的无效性
-
+冲销性外汇干预Sterilized Foreign Exchange Intervention：中央银行在外汇市场上买卖国外资产的同时，通过公开市场操作反向买卖国内资产，以抵消上述干预对本国货币供给的影响，从而保持货币供应量不变。
 资本的完全替代 prefect asset substitutability：本币债券和外币债券的预期收益率一致，反之则为资本的不完全替代，例如风险
 ### 资产不完全替代情况下的外汇市场均衡
 
@@ -119,7 +119,7 @@
 
 ![[Pasted image 20260507100142.png|300]]
 通过购买外汇进行冲销性干预Sterilized Intervention，不再是没有影响的，相反会引起本币的贬值
-外汇干预的信号效应：冲销性干预可能会给出央行的期望或意愿汇率朝某个方向变动
+外汇干预的信号效应signaling effect of foreign exchange intervention：冲销性干预可能会给出央行的期望或意愿汇率朝某个方向变动
 ## Reserve Currencies in the World Monetary System
 
 储备货币reserve currency

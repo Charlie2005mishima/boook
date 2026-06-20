@@ -1,13 +1,21 @@
+**※【定理】** 微积分基本定理
+1. $f\in R[a,b],F(x)=\int_{a}^xf(t)dt$，则$F$在$[a,b]$上Lipschitz连续，且在$f$的每一个连续点$x_{0}\in[a,b]$，有$F'(x_{0})=f(x_{0})$.
+	1. 特别地，$f\in C[a,b]$，则$F(x)=\int_{a}^xf(t)dt$可导，且$F'(x)=f(x)$.
+2. NL：记$F$在$[a,b]$上处处可导，记$f=F'$. 若$f\in R[a,b]$，则$\int_{a}^b f(x)dx=F(b)-F(a)$.
+
+注：Riemann积分要求被积函数有界且几乎处处连续. 反常积分只是用来处理不可积函数的特殊形式.
 ## 5.1 单调函数的可微性
-### 5.1.1 Vitali覆盖定理
+### 1 Vitali覆盖定理
 
 **※【定义】** Vitali覆盖
 设$E\subset \mathbb{R}$，$\Gamma=\{ I_{n} \}$是一个区间族. 若对任意的$x\in E$以及$\varepsilon>0$，存在$I_{n}\in\Gamma$，使得$x\in I_{n},|I_{n}|<\varepsilon$，则称$\Gamma$是$E$在Vitali意义下的一个覆盖
 
+例 $E=[a,b]$，令$\{ r_{n} \}$为$[a,b]$中的全体有理数，作$I_{n,m}=\left[ r_{n}-\frac{1}{m},r_{n}+\frac{1}{m} \right]$，则区间族$\Gamma=\{ I_{n,m} \}$是$E$的Vitali覆盖.
+
 **※【定理】** Vitali覆盖定理
 设$E\subset \mathbb{R}$且$m^*(E)<+\infty$. 若$\Gamma$是$E$的Vitali覆盖，则对于任意的$\varepsilon>0$，存在有限个互不相交的$I_{j}\in\Gamma$，使得$m^*(E\setminus\cup_{j=1}^nI_{j})<\varepsilon$ 
 
-### 5.1.2 单调函数的可微性
+### 2 单调函数的可微性
 
 **※【定义】** Dini导数
 设$f(x)$是定义在$\mathbb{R}$中点$x_{0}$的一个领域上的实值函数，令

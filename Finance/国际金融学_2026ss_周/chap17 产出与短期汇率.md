@@ -65,7 +65,6 @@ $M^s/P=L(R,Y)$
 ![[Pasted image 20260505200911.png|300]]
 
 ### 推导AA曲线
-
 ![[Pasted image 20260505200958.png|300]]
 
 $M^S$的变动：$M^S$增长>>外汇市场本币贬值，E上身>>AA向上移动
@@ -79,7 +78,7 @@ $R^*$的变动：$R^*$上升>>E上升>>AA向上移动
 ![[Pasted image 20260507083900.png|300]]
 
 ![[Pasted image 20260507084646.png|300]]
-
+先是资本市场的调整，再是产品市场的调整
 ## 货币政策和财政政策的暂时变动
 
 ### 货币政策暂时变动
@@ -135,7 +134,7 @@ positive slope: Y+>>Yd+>>IM+
 ## 贸易流量的逐步调整和经常账户的动态分析
 
 ### J曲线
-A country’s current account worsens immediately after a real depreciation and begins to improve only some months later.
+A country's current account worsens immediately after a real depreciation and begins to improve only some months later.
 
 ![[Pasted image 20260507093126.png|300]]
 

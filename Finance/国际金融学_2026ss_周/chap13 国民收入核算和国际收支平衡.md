@@ -54,29 +54,66 @@ current account deficit implies a funds inflow by borrowing or negative net fore
 ### 国际收支恒等式的基本平衡
 
 经常账户余额+资本账户余额=金融账户余额
+inflow +; outflow -
+e.g. pay $20 for a DVD: current account outflow, financial account inflow.
+e.g. pay $20 for a stock: financial account outflow, financial account inflow.
+e.g. forgive debt: capital account outflow; financial account inflow.
+- 经常账户current account
+	- imports and exports: merchandise; services; income receipts
+	- net unilateral transfers: gifts (transfers)
+- 资本账户 Financial account
+	- 本国居民销售和外国居民购买之间的差别
+	- financial inflow: 境外贷款汇入；境内资产售出
+	- financial outflow: 境内贷款汇出；境外资产购入
+	- subcategories
+		- official international reserve assets
+		- all other assets
+		- statistical discrepancy
+- 金融账户Capital account
+	- records special transfers
 
-经常账户 资本账户 金融账户
-### 净错误与遗漏
+### 净错误与遗漏 statistical discrepancy
+Data from a transaction may come from different sources that differ in coverage, accuracy, and timing
 ### 官方储备交易
+- official international reserve assets: **the change** of foreign assets held by central banks to cushion against financial instability. =- The official settlements balance
+	- 官方国际储备 official international reserves：中央银行持有的外国资产
+- 官方外汇干预 official foreign exchange intervention：中央银行在私人外汇市场上的交易
+- 官方结算余额/国际收支余额 official settlement balance / (unofficially) balance of payments：经常账户、资本账户、金融账户余额的非储备部分之和
 
-官方国际储备 official reserve asset：中央银行持有的外国资产：- The official settlements balance
-官方外汇干预：中央银行在私人外汇市场上的交易
-官方结算余额/国际收支余额：经常账户、资本账户、金融账户余额的非储备部分之和
+- net international investment position NIIP
+- net foreign wealth
+- NIIP = NFW = foreign assets - foreign liabilities
+- △NIIP = CA + Valuation Changes
+	- huge CA deficit, why did the U.S. NIIP not deteriorate
+		- Large depreciation of the U.S. dollar
+		- Foreign stock markets outperform the U.S. stock market
+		- Housing price rises leads to the positive FA
+- net investment income NII
+- NII-NIIP paradox
+	- Dark Matter Hypothesis; Return Differential 
+- CA sustainability
+	- two-period endowment model
+	- $\max U(c_{1})+\beta U(c_{2}),s.t. C_{1}+NFW_{1}=Y_{1}+(1+r)NFW_{0},C_{2}=Y_{2}+(1+r)NFW_{1}$ 
 
-net international investment position NIIP
-NIIP = foreign assets - foreign liabilities
-△NIIP = CA + Valuation Changes
-net investment income NII
-Return Differential >> NII-NIIP paradox
 
-two-period endowment model
-$\max U(c_{1})+\beta U(c_{2}),s.t. C_{1}+NFW_{1}=Y_{1}+(1+r)NFW_{0},C_{2}=Y_{2}+(1+r)NFW_{1}$ 
-
+- GNP, GDP
+- NI = GNP - Dep + Net Unilateral Transfers
+	- NI: national income
+- CA = NX = EX - IM = Y - (C+G+I) = S - I
+- S = Y - C - G = (Y - T - C) + (T - G) = Sp + Sg 
+- Government Deficit = -Sg = G - T
+- Current Account: net income of a country
+- Financial Account: flows of financial assets
+- Capital Account: debt forgiveness, copyrights and trademarks, etc.
 - BoP: accounts for a country's payments to and its receipts from abroad
-- CA: net income of a country
-- Financial Accounts: flows of financial assets
-- Capital Accounts: debt forgiveness, copyrights and trademarks
 - BoP = CA + CapA +FA = 0
-- official international reserve assets = - official settlements balance
+	- money inflow OIRA + OSB - 
+	- money outflow - 
+- FA = OIRA + others +SD
+- official international reserve assets OIRA= - official settlements balance = - 狭义BOP
+	- Official International Reserve Assets（OIRA，官方国际储备资产）
 - OSB = - OIRA = CA + CapA + FA - OIRA
 - △NIIP = CA + Valuation Changes
+	- importance of valuation
+	- postive NII and negative NIIP
+		- dark matter; return differential
