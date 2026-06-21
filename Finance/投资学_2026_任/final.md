@@ -128,18 +128,72 @@ $R_{it}^e=\alpha _{i}+\beta _{iM}R_{Mt}^e+\beta _{iSMB}SMB_{t}+\beta _{iHML}HML_
 - liquidity measure
 	- trading volumn
 	- bid-ask spread
-	- Amihud illiquidity ratio: $\text{Illiq}_{i,t}=\left( \frac{1}{N_{il}} \right)\sum_{d} \frac{|r_{i,d}|}{vol_{i,d}}$ 
+	- Amihud illiquidity ratio: $\text{Illiq}_{i,t}=\left( \frac{1}{N_{i,t}} \right)\sum_{d} \frac{|r_{i,d}|}{vol_{i,d}}$ 
 	- Kyle's lambda: $\Delta p_{t}=a+\lambda q_{t}+\varepsilon _{t}$ 
 	- zero-return measure
 - premium for illquidity
 	- illiquidity related with size and volatility
 	- Construct portfolios of illiquid stocks and liquid stocks, within each country (𝑐), in month (𝑡).
 	- Run Fama-McBeth regressions to estimate illiquidity premium
+		- $R_{c,j,t}=b_{0\,c,t}+b_{1\,c,t}+ILLIQ_{c,j,t-1}+ctrls_{c,j,t-1}+\varepsilon_{c,j,t}$ 
+	- IMLc,t = Illiquid-minus-liquid return for country c in month t.
+
 ## 6 liquidity II
-
+- Some liquidity cost regressions
+	- ASPR：买卖价差；Rm：市场收益率；Ri：个股收益率；STD：波动率；TURN换手率
 ## 7 macro economic analysis
-
+![[Pasted image 20260621105731.png|500]]
+- Three factors determine a firm’s sensitivity to the business cycle
+	- Sensitivity of sales
+	- Operating leverage
+	- Financial leverage
+- peak phrase: commodity
+- contraction phrase: defensicve(pharmaceuticals, food, utilities)
+- trough phrase: capital goods
+- expansion phrase: cyclical consumer sectors (autos, luxury goods, durables)
 ## 8 equity valuation
+
+- 相对估值法（Valuation by Comparables）
+	- 常用估值倍数
+		-  P/E（市盈率）= Price / Earning
+		- EV/EBITDA | 适用于折旧/摊销差异大的公司，可比性强 
+		- EV/Sales | 适用于尚未产生正利润的初创企业 
+		- EV/EBIT | 类似EV/EBITDA，但包含折旧摊销影响 
+		- P/B（市净率） | 适用于银行、保险等资产密集型行业 
+- 账面价值、清算价值与托宾Q
+	- 账面价值（Book Value）= 总资产 - 总负债
+	- 清算价值（Liquidation Value）
+	- 重置成本与托宾Q（Tobin's Q）托宾Q = 市场价值 / 重置成本
+- 股息贴现模型（Dividend Discount Model, DDM）
+	- $V_0 = \frac{D_1}{1+k} + \frac{D_2}{(1+k)^2} + \frac{D_3}{(1+k)^3} + \cdots$.
+	- Constant Growth DDM: $V_0 = \frac{D_0(1+g)}{k-g} = \frac{D_1}{k-g}$.
+- 股息增长率的估计 $g = ROE \times b$
+	- \(ROE\)：净资产收益率
+	- \(b\)：留存比率（1 - 股息支付率）
+- 增长机会现值（PVGO）: $P_0 = \frac{E_1}{k} + PVGO$
+	- \(E_1/k\)：无增长价值（公司将所有盈利作为股息分配时的价值）
+	- PVGO：未来投资机会的净现值之和
+- 多阶段增长模型
+- 市盈率（P/E）分析
+	- P/E与PVGO的关系: $\frac{P_0}{E_1} = \frac{1}{k}\left(1 + \frac{PVGO}{E_1/k}\right)$.
+	- P/E的决定因素: $\frac{P_0}{E_1} = \frac{1-b}{k - ROE \times b}$
+- 自由现金流模型
+	- 公司自由现金流（FCFF）
+		- $FCFF = EBIT \times (1-t) + 折旧 - 资本性支出 - \Delta NOWC$
+		- $FCFF = EBITDA \times (1-t) + 折旧 \times t - 资本性支出 - \Delta NOWC$
+		- 公司价值
+			- 公司价值 $= \sum_{t=1}^{T} \frac{FCFF_t}{(1+WACC)^t} + \frac{V_T}{(1+WACC)^T}$
+			- 其中终值：$V_T = \frac{FCFF_{T+1}}{WACC - g}$
+		- WACC = $\frac{D}{D+E} \cdot r_d \cdot (1-t) + \frac{E}{D+E} \cdot k$
+	- 股权自由现金流（FCFE）$= FCFF - 利息 \times (1-t) + \Delta 债务$
+- 股权价值 = \sum_{t=1}^{T} \frac{FCFE_t}{(1+k_E)^t} + \frac{E_T}{(1+k_E)^T}
+- CAPM在估值中的应用与问题
+	- $k = r_f + \beta \times [E(r_M) - r_f]$
+- CAPM的实证问题：SML过于平坦
+- 实际数据拟合的SML比CAPM预测的**平坦得多**
+- **低\(\beta\)股票**：CAPM要求的回报率\(r_1\)过低 → 折现不足 → **被高估**
+- **高\(\beta\)股票**：CAPM要求的回报率\(r_1\)过高 → 折现过度 → **被低估**
+
 
 ## 9 bonds
 
