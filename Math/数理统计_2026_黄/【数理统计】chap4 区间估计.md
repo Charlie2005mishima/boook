@@ -111,3 +111,67 @@ $G(t-0,\theta_{2}(t))=P_{\theta_{2}}\{ T\leq t \}=\alpha_{2}$
 
 **※【定义】** 可信区间
 参数$\theta$的后验分布$\pi(\theta|\tilde{x})$，对给定的$1-\alpha$，若存在$\hat{\theta}_{L}=\hat{\theta}_{L}(\tilde{x}),\hat{\theta}_{U}=\hat{\theta}_{U}(\tilde{x})$，使得$P(\hat{\theta}_{L}\leq\theta\leq\hat{\theta}_{U}|\tilde{x})\geq 1-\alpha$，则称区间为参数$\theta$的可信水平为$1-\alpha$的置信区间
+
+
+## 寻找枢轴量的一般方法——将统计量枢轴量化
+
+### 一、基本思想
+
+- 枢轴量法构造置信区间的核心是：寻找一个**样本和参数的函数**，其分布**不依赖于未知参数**。
+- 若统计量 $T$ 的分布函数 $F(t;\theta)$ 已知，且 $F$ 关于 $t$ 连续，则 $F(T;\theta)\sim U(0,1)$，可将其作为枢轴量。
+- 由$P\{\alpha/2 \le F(T;\theta) \le 1-\alpha/2\}=1-\alpha$通过等价变形即可解出 $\theta$ 的置信水平为 $1-\alpha$ 的置信区间。
+
+### 二、连续分布函数情形
+
+1. 一般做法
+- 设统计量 $T=T(\tilde{X})$ 的分布函数为 $G(t;\theta)$，且 $G(t;\theta)$ 关于 $t$ 连续，关于 $\theta$ 连续且严格单调。
+- 若 $G$ 是 $\theta$ 的**严格减函数**，则通过不等式$\alpha_2 \le G(T;\theta) \le 1-\alpha_1$ 解得 $\theta_1(T)\le \theta \le \theta_2(T)$，从而得到置信区间 $[\theta_1(T),\theta_2(T)]$。
+- 若 $G$ 是 $\theta$ 的**严格增函数**，则区间方向相反，得 $[\theta_2(T),\theta_1(T)]$。
+
+**※【定理】** 连续且严格单调
+设 $T$ 的分布函数 $G(t;\theta)$ 关于 $t$ 连续，关于 $\theta$ 连续且严格单调。取 $\alpha_1+\alpha_2=\alpha$，定义 $\theta_1(t)$ 和 $\theta_2(t)$ 分别满足：
+$1-G(t-0;\theta_1(t)) = P_{\theta_1(t)}\{T\ge t\} = \alpha_1,$
+$G(t;\theta_2(t)) = P_{\theta_2(t)}\{T\le t\} = \alpha_2.$
+- 若 $G$ 是 $\theta$ 的严格减函数，则 $[\theta_1(T),\theta_2(T)]$ 是 $\theta$ 的**同等置信区间**（置信水平精确为 $1-\alpha$）。
+- 若 $G$ 是 $\theta$ 的严格增函数，则 $[\theta_2(T),\theta_1(T)]$ 是同等置信区间。
+
+### 三、一般情形
+
+**※【引理】** （分布函数变换的基本不等式）
+设 $F(x)$ 是随机变量 $X$ 的分布函数，则对任意 $0<y<1$，
+$$
+P\{F(X)\le y\}\le y \le P\{F(X-0)<y\}.
+$$
+特别地，若 $F$ 连续，则 $F(X)\sim U(0,1)$。
+
+**※【定理】** （仅要求关于参数连续）
+当 $G(t;\theta)$ 关于 $\theta$ 连续（但不一定关于 $t$ 连续）时，仍可按同样方式定义 $\theta_1(t)$ 和 $\theta_2(t)$：
+$$
+1-G(t-0;\theta_1(t))=\alpha_1,\quad G(t;\theta_2(t))=\alpha_2.
+$$
+- 若 $G$ 是 $\theta$ 的严格减函数，则 $[\theta_1(T),\theta_2(T)]$ 是置信水平**至少**为 $1-\alpha$ 的置信区间（不一定是同等置信区间，可能覆盖概率大于等于 $1-\alpha$）。
+- 若 $G$ 是 $\theta$ 的严格增函数，则 $[\theta_2(T),\theta_1(T)]$ 也是置信水平至少 $1-\alpha$ 的置信区间。
+
+### 四、离散分布下的具体构造（以泊松、二项为例）
+
+当 $T$ 取离散值时，$G(t;\theta)$ 是阶梯函数，不能直接得到精确的等尾区间。此时用“概率尽可能接近但不超过”的原则来确定边界。
+
+1. 泊松分布 $P(\lambda)$ 情形
+- 样本 $X_1,\dots,X_n$，$T=\sum X_i \sim P(n\lambda)$。
+- $T$ 的分布函数是 $\lambda$ 的严格减函数。
+- 取 $\alpha_1=\alpha_2=\alpha/2$，定义下限 $\lambda_L$ 和上限 $\lambda_U$ 满足：$P_{\lambda_L}(T\ge k)=\alpha/2,\quad P_{\lambda_U}(T\le k)=\alpha/2,$其中 $k$ 为观察到的 $T$ 值。
+- 利用泊松分布与 $\chi^2$ 分布的关系：
+- $P_{\lambda}(T\ge k)=\chi^2(2n\lambda;\,2k),$
+- $P_{\lambda}(T\le k)=1-P_{\lambda}(T\ge k+1)=1-\chi^2(2n\lambda;\,2(k+1)).$其中 $\chi^2(x;m)$ 表示自由度为 $m$ 的 $\chi^2$ 分布函数在 $x$ 处的值。
+- 解得：$\lambda_L = \frac{\chi^2_{1-\alpha/2}(2k)}{2n},\quad\lambda_U = \frac{\chi^2_{\alpha/2}(2k+2)}{2n},$其中 $\chi^2_{\beta}(m)$ 为 $\chi^2(m)$ 的下侧 $\beta$ 分位数。
+- 置信区间为：$\left[ \frac{\chi^2_{1-\alpha/2}(2T)}{2n},\ \frac{\chi^2_{\alpha/2}(2T+2)}{2n} \right].$
+
+2. 二项分布 $B(1,p)$ 情形
+- 样本 $X_i\sim B(1,p)$，$T=\sum X_i \sim B(n,p)$。
+- $P_p(T\ge k)$ 是 $p$ 的严格增函数，故 $T$ 的分布函数是 $p$ 的严格减函数。
+- 取 $p_L$ 和 $p_U$ 满足：$P_{p_L}(T\ge k)=\alpha/2,\quad P_{p_U}(T\le k)=\alpha/2$
+- 利用二项分布与 $F$ 分布的关系（由 beta 积分）：$P_p(T\ge k)=P\left(F(2k,\,2(n+1-k)) \le \frac{n+1-k}{k}\cdot \frac{p}{1-p}\right).$同理，$P_p(T\le k)=1-P_p(T\ge k+1)$，可转化为 $F$ 分布分位数。
+- 具体求解：
+  - 令 $\nu_1=2k,\ \nu_2=2(n+1-k)$，则$\frac{\nu_2}{\nu_1}\cdot \frac{p_L}{1-p_L} = F_{1-\alpha/2}(\nu_1,\nu_2),$解得 $p_L$。
+  - 令 $\nu_1'=2(k+1),\ \nu_2'=2(n-k)$，则$\frac{\nu_2'}{\nu_1'}\cdot \frac{p_U}{1-p_U} = F_{\alpha/2}(\nu_1',\nu_2'),$解得 $p_U$。
+- 置信区间为 $[p_L(T),\, p_U(T)]$，置信水平至少 $1-\alpha$（因离散性，实际覆盖概率≥名义水平）。

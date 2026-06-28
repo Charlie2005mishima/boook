@@ -226,3 +226,74 @@ $z$的后验预测密度函数$\hat{p}_{Z|T}(z|t)=\int_{\Theta}g(z|\theta)\pi(\t
 即对$X$左尺度变换$Y=cX(c>0)$，同时对$\sigma$也作相同的尺度变换$\eta=c\sigma$，容易知道$Y\sim \frac{g(x /\eta)}{\eta}$.
 所以$(X,\theta)$与$(Y,\eta)$的统计结构相同. 因此主张它们有相同的无信息先验是合理的.
 故可取$\pi(\sigma)=\frac{1}{\sigma},\sigma>0$，它是一个广义先验密度. 
+
+**※【定义】** Jeffrey 先验
+对数似然函数$l(\theta|\tilde{x})=\log p(\tilde{x}|\theta)$，信息矩阵$I(\theta)=(I_{ij}(\theta))_{p\times p},I_{ij}(\theta)=E_{\tilde{X}|\theta}\left\{  - \frac{ \partial^{2}l }{ \partial\theta _{i}\partial\theta _{j} }  \right\}$，$\theta$的无信息先验密度函数取$\pi(\theta)\propto|I(\theta)|^{1/2}$.
+
+**※【定义】** empirical bayes
+- 设样本密度（或分布列）为 $p(\tilde{x}|\theta)$，先验为 $\pi(\theta|\gamma)$。
+- 求 $\tilde{X}$ 的边际分布：$m(\tilde{x}|\gamma) = \int p(\tilde{x}|\theta)\pi(\theta|\gamma)\,d\theta.$
+- 将 $m(\tilde{x}|\gamma)$ 视为关于 $\gamma$ 的似然函数，求其极大似然估计 $\hat{\gamma}_{\text{MLE}}$。
+- 以 $\pi(\theta|\hat{\gamma})$ 作为 $\theta$ 的先验分布，进行后续Bayes分析。
+
+
+**※【定义】** Hierarchical Bayes
+- 当先验分布 $\pi(\theta|\gamma)$ 仍依赖于未知超参数 $\gamma$ 时，可对 $\gamma$ 再赋予一个先验分布 $\psi(\gamma)$
+- 形成**多层先验**：$\tilde{X} \mid \theta \sim p(\tilde{x}|\theta),\quad \theta \mid \gamma \sim \pi(\theta|\gamma),\quad \gamma \sim \psi(\gamma).$
+- 由此得到 $\theta$ 的边际先验：$\pi(\theta) = \int \pi(\theta|\gamma)\psi(\gamma)\,d\gamma.$
+
+- 经典框架下，均方误差 $R(\delta,\theta)=\mathbb{E}_\theta[\theta-\delta(\tilde{X})]^2$ 无法关于 $\theta$ 一致最小化。
+- 改用**加权平均**准则，即寻找 $\delta$ 使$\int R(\delta,\theta)\pi(\theta)\,d\theta$最小，其中 $\pi(\theta)\ge0$ 为给定的权函数。
+
+**※【定义】** Bayes风险
+- 将 $\theta$ 视为随机变量（先验 $\pi$），则加权平均均方误差即为**Bayes风险**：$R_\pi(\delta)=\mathbb{E}[\theta-\delta(\tilde{X})]^2=\int R(\delta,\theta)\pi(\theta)\,d\theta.$
+
+**※【定义】** 后验均方误差（PMSE）
+- 由联合分布 $p(\tilde{x},\theta)=p(\tilde{x}|\theta)\pi(\theta)=\pi(\theta|\tilde{x})p(\tilde{x})$，有$R_\pi(\delta)=\int \mathbb{E}[\{\theta-\delta(\tilde{x})\}^2 \mid \tilde{X}=\tilde{x}]\,p(\tilde{x})\,d\tilde{x}.$
+- 其中 $\mathbb{E}[\{\theta-\delta(\tilde{x})\}^2 \mid \tilde{X}=\tilde{x}]$ 称为后验期望损失。
+
+- 逐点极小化后验期望损失等价于极小化Bayes风险。
+- 对平方损失，最优解为$\arg\min_{\delta(\tilde{x})} \mathbb{E}[\{\theta-\delta(\tilde{x})\}^2 \mid \tilde{x}]= \mathbb{E}[\theta \mid \tilde{x}],$ 即**期望型Bayes估计**。
+- 若采用绝对值损失 $|\theta-\delta|$，最优解为后验分布的中位数。
+
+
+## 四、损失函数与Bayes风险的一般框架
+
+### 1. 损失函数与风险
+- 设决策函数 $\delta=\delta(\tilde{x})$，参数 $\theta$，损失函数 $L(\delta,\theta)$。
+- **风险函数**（频率风险）：
+  $$
+  R(\delta,\theta)=\mathbb{E}_\theta[L(\delta(\tilde{X}),\theta)].
+  $$
+- **Bayes风险**（平均风险）：
+  $$
+  R_\pi(\delta)=\int_\Theta R(\delta,\theta)\pi(\theta)\,d\theta.
+  $$
+- **后验风险**：
+  $$
+  R(\delta\mid\tilde{x})=\mathbb{E}_{\theta\mid\tilde{x}}[L(\delta,\theta)]
+  =\int_\Theta L(\delta,\theta)\pi(\theta\mid\tilde{x})\,d\theta.
+  $$
+
+### 2. 后验风险最小原则（定理）
+- 若 $\delta_\pi$ 使后验风险逐点最小，即
+  $$
+  R(\delta_\pi \mid \tilde{x})=\inf_\delta R(\delta \mid \tilde{x}),
+  $$
+  则 $\delta_\pi$ 也使得Bayes风险 $R_\pi(\delta)$ 全局最小。
+- 即：**逐点极小化后验风险 ⇔ 极小化Bayes风险**。
+
+---
+
+## 五、加权平方损失下的Bayes估计（定理）
+
+- 设损失函数为 $L(\delta,\theta)=w(\theta)(\delta-\theta)^2$，其中 $w(\theta)>0$ 恒正。
+- 后验风险：
+  $$
+  R(\delta\mid\tilde{x})=\mathbb{E}[w(\theta)(\theta-\delta)^2 \mid \tilde{x}].
+  $$
+- 求导可得最优解：
+  $$
+  \hat{\theta}_B = \frac{\mathbb{E}[\theta w(\theta) \mid \tilde{x}]}{\mathbb{E}[w(\theta) \mid \tilde{x}]}.
+  $$
+- 当 $w(\theta)\equiv1$ 时退化为普通后验期望。
