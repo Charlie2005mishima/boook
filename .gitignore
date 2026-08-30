@@ -1,7 +1,11 @@
 # Ignore everything at root
 /*
 # Except these folders
-!/Finance/
-!/Math/
+!/FINAN/
+!/MATH/
+!/CS/
+!/READ/
+# Track the README at root
+!/README.md
 # Track the gitignore itself
 !/.gitignore
