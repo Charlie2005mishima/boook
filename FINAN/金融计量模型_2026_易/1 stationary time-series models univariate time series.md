@@ -158,7 +158,7 @@ $\{\phi_{k,k},k\ge1\}$ 为偏自相关函数。
 
 **※【性质】从 ACF 求 PACF**  
 利用 Yule-Walker 方程，例如：
-$\phi_{2,2}=\frac{\rho_2-\rho_1^2}{1-\rho_1^2}$。
+$\phi_{2,2}=\frac{\rho_2-\rho_1^2}{1-\rho_1^2}$。这里使用PACF带进去算。
 
 **※【性质】AR(1) 的 ACF**  
 $\gamma_0=\frac{\sigma^2}{1-\phi_1^2}$，  
@@ -190,16 +190,20 @@ $\rho_k=\sum_{j=1}^{p}\phi_j\rho_{k-j},\ k\ge\max\{p,q+1\}$。
 
 **※【性质】理论 ACF 与 PACF 总结**
 
-| 过程 | ACF | PACF |
-|---|---|---|
-| 白噪声 | 所有 $\rho_s=0,\ s\ne0$ | 所有 $\phi_{s,s}=0$ |
-| AR(1): $\phi_1>0$ | 直接几何衰减 | lag 1 后截断 |
-| AR(1): $\phi_1<0$ | 振荡衰减 | lag 1 后截断 |
-| AR(p) | 衰减趋于零，可振荡 | lag p 后截断 |
-| MA(1): $\beta_1>0$ | lag 1 正尖峰，之后为 0 | 振荡衰减 |
-| MA(1): $\beta_1<0$ | lag 1 负尖峰，之后为 0 | 几何衰减 |
-| ARMA(1,1) | lag 1 后几何或振荡衰减 | lag 1 后几何或振荡衰减 |
-| ARMA(p,q) | lag q 后衰减 | lag p 后衰减 |
+| 过程                 | ACF                   | PACF              |
+| ------------------ | --------------------- | ----------------- |
+| 白噪声                | 所有 $\rho_s=0,\ s\ne0$ | 所有 $\phi_{s,s}=0$ |
+| AR(1): $\phi_1>0$  | 直接几何衰减                | lag 1 后截断         |
+| AR(1): $\phi_1<0$  | 振荡衰减                  | lag 1 后截断         |
+| AR(p)              | 衰减趋于零，可振荡             | lag p 后截断         |
+| MA(1): $\beta_1>0$ | lag 1 正尖峰，之后为 0       | 振荡衰减              |
+| MA(1): $\beta_1<0$ | lag 1 负尖峰，之后为 0       | 几何衰减              |
+| ARMA(1,1)          | lag 1 后几何或振荡衰减        | lag 1 后几何或振荡衰减    |
+| ARMA(p,q)          | lag q 后衰减             | lag p 后衰减         |
+
+有几个事实：当模型是充分的，就会有回归残差是时间序列独立的；当模型是不充分的，回归残差是序列相关的；当回归中加入了冗余变量，理论上的相关系数应当为零；PACF可以直接挑选出AR模型。
+这里在计算上，带着方差总是行动不变的。计算 $\rho$ 族来计算会更加方便。
+
 
 ---
 
@@ -219,21 +223,29 @@ $H_0:\rho_k=0$，$H_1:\rho_k\ne0$。
 统计量：$t=\frac{\hat\rho_k}{\sqrt{(1+2\sum_{j=1}^{k-1}\hat\rho_j^2)/T}}\xrightarrow{D}N(0,1)$。  
 若 $\{y_t\}$ 为 i.i.d.，则方差为 $1/T$。
 
+注意：这里检验的时候应该选取较大的m一直做检验且中间不应该停下来。
+
+*※【例题】* 如何检验一个白噪声
+白噪声有性质 $\hat{\rho}_{k} \stackrel{ D}{ \longrightarrow}N(0,1/T)$.
+$H_0:\rho_k=0$，$H_1:\rho_k\ne0$。  
+统计量：$t=\frac{\hat\rho_k}{\sqrt{1/T}}\xrightarrow{D}N(0,1)$。  
+
 **※【检验】Ljung-Box Q 统计量**  
 $H_0:\rho_1=\cdots=\rho_m=0$，$H_1:\rho_i\ne0$ 对某个 $1\le i\le m$。  
-在 i.i.d. 假设下：
-$Q(m)=T(T+2)\sum_{k=1}^{m}\frac{\hat\rho_k^2}{T-k}\xrightarrow{D}\chi_m^2$。  
+在 i.i.d. 假设下：$Q(m)=T(T+2)\sum_{k=1}^{m}\frac{\hat\rho_k^2}{T-k}\xrightarrow{D}\chi_m^2$。  
 拒绝域：$Q(m)>\chi_m^2(\alpha)$。  
-残差诊断时：
-$Q(m)=T(T+2)\sum_{k=1}^{m}\frac{\tilde\rho_k^2}{T-k}\xrightarrow{D}\chi_{m-g}^2$，  
-其中 $\tilde\rho_k$ 是残差样本 ACF，$g$ 是估计参数个数。
+残差诊断时：$Q(m)=T(T+2)\sum_{k=1}^{m}\frac{\tilde\rho_k^2}{T-k}\xrightarrow{D}\chi_{m-g}^2$，  
+其中 $\tilde\rho_k$ 是残差样本 ACF，$g$ 是估计参数个数。可以用来判断我们选取的模型是否是充分的。
 
 **※【定义】样本 PACF(sample PACF)**  
 逐阶用 OLS 估计：
 $y_t=\phi_{k,0}+\phi_{k,1}y_{t-1}+\cdots+\phi_{k,k}y_{t-k}+e_{kt}$。  
 第 $k$ 个方程得到的 $\hat\phi_{k,k}$ 称为 lag-$k$ 样本 PACF。  
 对平稳高斯 AR(p)，$\hat\phi_{k,k}$ 收敛到 $\phi_{k,k}$；  
-$k>p$ 时 $\phi_{k,k}=0$，$\hat\phi_{k,k}$ 渐近 $N(0,1/T)$。
+$k>p$ 时 $\phi_{k,k}=0$，$\hat\phi_{k,k}$ 渐近 $N(0,1/T)$。这里可以对 $\hat{\phi}_{k,k}=0$ 与否进行检验。
+
+1. 一般先用PACF定一下阶数，也就是AR(p). 得到回归残差 ut. 
+2. 计算 ut的ACF和PACF. 拟合一个MA(q)
 
 ---
 
@@ -242,16 +254,22 @@ $k>p$ 时 $\phi_{k,k}=0$，$\hat\phi_{k,k}$ 渐近 $N(0,1/T)$。
 **※【方法】Box-Jenkins 方法(Box-Jenkins approach)**  
 三阶段：
 - 识别(identification)：观察时间图、样本 ACF、样本 PACF，与理论 ARMA 过程比较，提出候选模型；用 AIC、BIC 选择模型。
-- 估计(estimation)：AR 模型可用最小二乘或最大似然；MA 与 ARMA 模型通常用最大似然。
+- 估计(estimation)：
+	- AR 模型可用最小二乘或最大似然；
+	- MA 与 ARMA 模型通常用最大似然。
 - 模型诊断检查(diagnostic checking)：残差图、残差 ACF/PACF、Q 统计量、子样本检验、样本外预测。
 
 **※【准则】信息准则(information criteria)**  
 $AIC(I)=\log(\tilde\sigma_I^2)+\frac{2I}{T}$。  
 $BIC(I)=\log(\tilde\sigma_I^2)+\frac{I\log(T)}{T}$。  
 其中 $I$ 是估计参数个数，$\tilde\sigma_I^2=\frac{SSR}{T}$。  
-选择 AIC 或 BIC 最小的模型。  
+选择 AIC 或 BIC **最小**的模型。  
 BIC 大样本性质更好，渐近选择正确模型；AIC 偏向过参数化。小样本中 AIC 可能更好。  
 若二者选择不同：BIC 模型更简约，应检查残差是否白噪声；AIC 模型可能过参数化，应检查系数 t 统计量是否显著。
+
+数据处理步骤
+1. 先画时序图
+2. 计算样本ACF、样本PACF
 
 ---
 

@@ -85,11 +85,22 @@ $\theta_{\{ a,b,c \}}=\left\{ 0, \frac{\pi}{3}, \frac{2\pi}{3} \right\}$, $d_{\c
 **※【定义】** 角度距离(angular distance)：
 余弦距离的等距变换，定义为 $d_{\text{ang}}(a, b) = \cos^{-1}(\langle a, b \rangle) = \arccos(\langle a, b \rangle)$。它仅测量角度，$d_{\text{ang}}(a, b) \in [0, \pi]$，且在 $\mathbb{S}^{d-1}$ 上是度量。
 
+三角不等式证明：
+$\vec{a}=(\sin\theta_{1}\cos \phi_{1},\sin\theta_{1}\sin \phi_{1},\cos\theta_{1})$,
+$\vec{b}=(0,0,1)$,
+$\vec{c}=(\sin\theta_{2}\cos \phi_{2},\sin\theta_{2}\sin \phi_{2},\cos\theta_{2})$,
+$d_{ang}(\vec{a},\vec{c})=\sin\theta_{1}\sin\theta_{2}(\cos \phi_{1}\cos \phi_{2}+\sin \phi_{1}\sin \phi_{2})+\cos \theta_{1}\cos\theta_{2}$.
+
 **几何理解**：将两个点视为位于单位球 $\mathbb{S}^1 \subset \mathbb{R}^2$ 上。$d_{\text{ang}}(a, b)$ 是角度 $\theta_{a,b}$ 的弧度，等价于在球面上行走时 $a$ 和 $b$ 之间的弧长。由于它测量球面上的最短距离，因此满足三角不等式。
 
 ### 4.2.4 KL 散度(KL Divergence)
 
-**※【定义】** Kullback-Leibler 散度(Kullback-Leibler Divergence)：也称为 KL 散度，它不是度量。它接收离散分布 $X_a$ 和 $X_b$，等价于向量 $a, b \in \Delta_{\circ}^{d-1}$。其中 $\Delta_{\circ}^{d-1} = \{x = (x_1, \ldots, x_d) \in \mathbb{R}^d \mid \|x\|_1 = 1 \text{ 且 } x_i > 0 \text{ 对所有 } i\}$。定义为 $d_{KL}(X_a, X_b) = d_{KL}(a, b) = \sum_{i=1}^d a_i \ln(a_i / b_i)$。
+**※【定义】** Kullback-Leibler 散度(Kullback-Leibler Divergence)：
+也称为 KL 散度，它不是度量。它接收离散分布 $X_a$ 和 $X_b$，等价于向量 $a, b \in \Delta_{\circ}^{d-1}$。其中 $\Delta_{\circ}^{d-1} = \{x = (x_1, \ldots, x_d) \in \mathbb{R}^d \mid \|x\|_1 = 1 \text{ 且 } x_i > 0 \text{ 对所有 } i\}$。定义为 $d_{KL}(X_a, X_b) = d_{KL}(a, b) = \sum_{i=1}^d a_i \ln(a_i / b_i)$。
+
+凸函数性质：$\sum_{i=1}^da_{i}\ln(a_{i}/b_{i})\geq \sum_{i=1}^n\ln\left( a_{i}\cdot \frac{b_{i}}{a_{i}} \right)$.
+
+$f,g$ 是概率定义在 $\mathbb{R}^d$。那么$d_{KL}(f,g)=\int_{\mathbb{R}^d}f(x)\ln \frac{f(x)}{g(x)}dx$.
 
 它可以解释为使用分布 $b$ 代替 $a$ 时的“信息增益”。注意 $d_{KL}$ 不是度量，它违反 (M3) 因为不对称，也违反三角不等式 (M4)。
 
@@ -101,15 +112,28 @@ $\theta_{\{ a,b,c \}}=\left\{ 0, \frac{\pi}{3}, \frac{2\pi}{3} \right\}$, $d_{\c
 
 ### 4.3.1 杰卡德距离(Jaccard Distance)
 
-**※【定义】** 杰卡德距离(Jaccard distance)：两个集合 $A$ 和 $B$ 之间的杰卡德距离定义为 $d_J(A, B) = 1 - \frac{|A \cap B|}{|A \cup B|}$。由于并集总是大于交集，分数项在 $0$ 到 $1$ 之间，距离值在 $[0, 1]$ 内。当集合没有共同元素时为 $1$，当集合完全相同时为 $0$。
+**※【定义】** 杰卡德距离(Jaccard distance)：
+两个集合 $A$ 和 $B$ 之间的杰卡德距离定义为 $d_J(A, B) = 1 - \frac{|A \cap B|}{|A \cup B|}$。
+由于并集总是大于交集，分数项在 $0$ 到 $1$ 之间，距离值在 $[0, 1]$ 内。
+当集合没有共同元素时为 $1$，当集合完全相同时为 $0$。
 
-**※【例题】** 杰卡德距离：$A = \{0, 1, 2, 5, 6\}$ 和 $B = \{0, 2, 3, 5, 7, 9\}$。$d_J(A, B) = 1 - \frac{| \{0, 2, 5\} |}{| \{0, 1, 2, 3, 5, 6, 7, 9\} |} = 1 - \frac{3}{8} = 0.625$。若向 $A$ 添加一个已在 $B$ 中的元素 $7$，分子增加，分母不变，距离变小。若向 $A$ 添加一个不在 $A$ 或 $B$ 中的元素 $4$，分子不变，分母增加，距离变大。
+**※【例题】** 杰卡德距离：
+$A = \{0, 1, 2, 5, 6\}$ 和 $B = \{0, 2, 3, 5, 7, 9\}$。
+$d_J(A, B) = 1 - \frac{| \{0, 2, 5\} |}{| \{0, 1, 2, 3, 5, 6, 7, 9\} |} = 1 - \frac{3}{8} = 0.625$。
+若向 $A$ 添加一个已在 $B$ 中的元素 $7$，分子增加，分母不变，距离变小。
+若向 $A$ 添加一个不在 $A$ 或 $B$ 中的元素 $4$，分子不变，分母增加，距离变大。
 
 杰卡德距离是度量，且对集合大小不变，仅取决于两个集合中相同元素的比例。它不需要知道元素来自的更大全集 $\Omega$。
 
-**※【定理】** 杰卡德距离的度量性质证明：前三个性质直接成立。(M4) 三角不等式：$d_J(A, C) + d_J(C, B) \geq d_J(A, B)$。记 $d_J(A, B) = 1 - \frac{|A \cap B|}{|A \cup B|} = \frac{|A \triangle B|}{|A \cup B|}$。首先排除 $C$ 中不属于 $A$ 或 $B$ 的元素，移除它们只会减少左边而不影响右边。假设 $C \subseteq A$ 且 $C \subseteq B$。则 $d_J(A, C) + d_J(C, B) = \frac{|A \setminus C|}{|A|} + \frac{|B \setminus C|}{|B|} \geq \frac{|A \setminus C| + |B \setminus C|}{|A \cup B|} \geq \frac{|A \triangle B|}{|A \cup B|} = d_J(A, B)$。
+**※【定理】** 杰卡德距离的度量性质证明：
+前三个性质直接成立。
+(M4) 三角不等式：$d_J(A, C) + d_J(C, B) \geq d_J(A, B)$。
+记 $d_J(A, B) = 1 - \frac{|A \cap B|}{|A \cup B|} = \frac{|A \triangle B|}{|A \cup B|}$。
+首先排除 $C$ 中不属于 $A\cup B$ 的元素，移除它们只会减少左边而不影响右边。
+假设 $C \subseteq A$ 且 $C \subseteq B$。则 $d_J(A, C) + d_J(C, B) = \frac{|A \setminus C|}{|A|} + \frac{|B \setminus C|}{|B|} \geq \frac{|A \setminus C| + |B \setminus C|}{|A \cup B|} \geq \frac{|A \triangle B|}{|A \cup B|} = d_J(A, B)$。
+假设 $\exists\,x\in C,x\not\in A\cap B$，有$|A\triangle C|+|C\triangle B|\geq|A\triangle B|$.
 
-### 4.3.2 编辑距离(Edit Distance)
+### \*4.3.2 编辑距离(Edit Distance)
 
 **※【定义】** 编辑距离(Edit distance)：设 $\Sigma$ 为字母表，字符串 $a, b \in \Sigma^d$。编辑距离 $d_{ed}(a, b)$ 是将 $a$ 变为 $b$ 所需的操作次数，操作可以是删除或插入字母。字符串不需要长度相同。
 
@@ -170,6 +194,10 @@ $G_4 = \{[I\ do], [do\ not], [not\ do], [not\ like], [like\ them], [them\ Pam], 
 - 索伦森-骰子相似度(Sørensen-Dice similarity)：$s_{\text{Dice}}(A, B) = s_{2, 0, 0, 1}(A, B) = \frac{2 |A \cap B|}{2 |A \cap B| + |A \triangle B|}$
 
 对于 $s_J, s_{\text{Ham}}, s_{\text{Andb}}, s_{\text{RT}}$，$d(A, B) = 1 - s(A, B)$ 是度量。特别是 $d_{\text{Ham}}(A, B) = |\Omega| (1 - s_{\text{Ham}}(A, B))$ 被称为汉明距离，通常用于比特向量。
+
+Hamming Distance: 三角不等式在发现 $|A \cap B| + |\overline{A \cup B}| + |A \triangle B|=|\Omega|$ 后容易证明
+Andberg Distance: $d_{Andb}(A,B)=\frac{2d_{Ham}}{1+d_{Ham}}$，令$g(t)= \frac{2t}{1+t},t\geq0$.
+有 $g'(t)>0$; $g(x)+g(y)-g(x+y)\geq0$.
 
 **※【例题】** 集合相似度：$A = \{0, 1, 2, 5, 6\}$ 和 $B = \{0, 2, 3, 5, 7, 9\}$ 在 $\Omega = \{0, 1, 2, 3, 4, 5, 6, 7, 8, 9\}$ 中。
 $s_J(A, B) = \frac{3}{8} = 0.375$

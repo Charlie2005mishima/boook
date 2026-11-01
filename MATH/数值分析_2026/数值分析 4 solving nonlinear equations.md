@@ -403,16 +403,18 @@ $k=4: x_1=-0.497251208, x_2=0.254078592$
 由泰勒定理和 $f_i \in C^2$ 得 $f_i(\boldsymbol{\alpha}) = f_i(\mathbf{x}^{(k)}) + \sum_{j=1}^n (\alpha_j - x_j^{(k)})\frac{\partial f_i(\mathbf{x}^{(k)})}{\partial x_j} + \frac{1}{2}c_i^{(k)}$，
 其中 $c_i^{(k)}$ 是 $\mathbf{c}^{(k)}$ 的第 $i$ 个元素，$c_i^{(k)} = \left[\sum_{j=1}^n (\alpha_j - x_j^{(k)})\frac{\partial}{\partial x_j}\right]^2 f_i(\boldsymbol{\xi}^{(k,i)})$，$\boldsymbol{\xi}^{(k,i)}$ 在连接 $\mathbf{x}^{(k)}$ 和 $\boldsymbol{\alpha}$ 的线段上。
 则 $\mathbf{0} = \mathbf{f}(\boldsymbol{\alpha}) = \mathbf{f}(\mathbf{x}^{(k)}) + D\mathbf{f}(\mathbf{x}^{(k)})(\boldsymbol{\alpha} - \mathbf{x}^{(k)}) + \frac{1}{2}\mathbf{c}^{(k)}$，结合 (4.48) 得 $\mathbf{x}^{(k+1)} - \boldsymbol{\alpha} = \frac{1}{2}[D\mathbf{f}(\mathbf{x}^{(k)})]^{-1}\mathbf{c}^{(k)}$。
-由 $M_i$ 的定义得 $|c_i^{(k)}| \leq n^2 M_i \|\boldsymbol{\alpha} - \mathbf{x}^{(k)}\|_\infty^2$，故 $\|\mathbf{c}^{(k)}\|_\infty \leq n^2 \max_i M_i \|\boldsymbol{\alpha} - \mathbf{x}^{(k)}\|_\infty^2$。
+由 $M_i$ 的定义得 $|c_i^{(k)}| \leq n^2 M_i \|\boldsymbol{\alpha} - \mathbf{x}^{(k)}\|_\infty^2$，
+故 $\|\mathbf{c}^{(k)}\|_\infty \leq n^2 \max_i M_i \|\boldsymbol{\alpha} - \mathbf{x}^{(k)}\|_\infty^2$。
 因此 $\|\mathbf{x}^{(k+1)} - \boldsymbol{\alpha}\|_\infty \leq M \|\boldsymbol{\alpha} - \mathbf{x}^{(k)}\|_\infty^2$。
 比较 (4.39) 可知若 $\{\mathbf{x}^{(k)}\}$ 收敛，则收敛阶为 2。还需证明 (a) 收敛且 (b) 收敛到 $\boldsymbol{\alpha}$。
 由 (i) 和 (ii) 得 $M\|\mathbf{x}^{(0)} - \boldsymbol{\alpha}\|_\infty < 1$，归纳得 $\|\mathbf{x}^{(k)} - \boldsymbol{\alpha}\|_\infty \leq \frac{1}{M}(M\|\mathbf{x}^{(0)} - \boldsymbol{\alpha}\|_\infty)^{2^k}$，这证明了 (a) 和 (b)。最后，若 $D^2\mathbf{f}(\boldsymbol{\alpha}) = \mathbf{0}$，收敛速度可能高于 2。$\square$
 
 ### 4.7.3 拟牛顿法
 
-**※【算法】** 对于无约束优化问题 $\min_{\mathbf{x} \in \mathbb{R}^n} f(\mathbf{x})$，可利用一阶必要条件 $\nabla f(\mathbf{x}) = \mathbf{0}$ 应用牛顿法。迭代为
-$\mathbf{x}^{(k+1)} = \mathbf{x}^{(k)} - H_k^{-1}\mathbf{g}^{(k)}$ (4.50)
-其中 $\mathbf{g}^{(k)} = \mathbf{g}(\mathbf{x}^{(k)}) = \nabla f(\mathbf{x}^{(k)})$ 是 $f$ 在 $\mathbf{x}^{(k)}$ 处的梯度向量，$H_k = H(\mathbf{x}^{(k)})$ 是 $f$ 在 $\mathbf{x}^{(k)}$ 处的海森矩阵，定义为 $H = (h_{ij})_{n \times n}$，$h_{ij}(\mathbf{x}) = \frac{\partial^2 f}{\partial x_i \partial x_j}(\mathbf{x})$。
+**※【算法】** 对于无约束优化问题 $\min_{\mathbf{x} \in \mathbb{R}^n} f(\mathbf{x})$，可利用一阶必要条件 $\nabla f(\mathbf{x}) = \mathbf{0}$ 应用牛顿法。
+迭代为 $\mathbf{x}^{(k+1)} = \mathbf{x}^{(k)} - H_k^{-1}\mathbf{g}^{(k)}$ (4.50)
+其中 $\mathbf{g}^{(k)} = \mathbf{g}(\mathbf{x}^{(k)}) = \nabla f(\mathbf{x}^{(k)})$ 是 $f$ 在 $\mathbf{x}^{(k)}$ 处的梯度向量，
+$H_k = H(\mathbf{x}^{(k)})$ 是 $f$ 在 $\mathbf{x}^{(k)}$ 处的海森矩阵，定义为 $H = (h_{ij})_{n \times n}$，$h_{ij}(\mathbf{x}) = \frac{\partial^2 f}{\partial x_i \partial x_j}(\mathbf{x})$。
 
 **※【算法】** 拟牛顿法(Quasi-Newton methods)旨在通过使用对称正定矩阵近似海森矩阵 $H_k$ 或其逆矩阵来避免计算二阶导数，从而在此近似下优化目标函数 $f$。不同的近似方案产生不同的拟牛顿法变体。
 
