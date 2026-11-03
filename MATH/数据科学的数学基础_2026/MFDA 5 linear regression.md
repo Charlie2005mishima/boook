@@ -43,6 +43,11 @@ $S(\alpha) = \mathrm{SSE}$ 是凸二次函数。
 $\sum_{i=1}^n X_{i,j} \langle x_i, \alpha \rangle = \sum_{i=1}^n X_{i,j} y_i \implies (X^T X)\alpha = X^T y$。
 几何上，这意味着残差向量 $r = y - X\alpha$ 与预测向量 $\hat{y} = X\alpha$ 正交：$\langle r, \hat{y} \rangle = 0$。由于 $\hat{y}$ 限制在 $X$ 的列空间内，最优解使得 $r$ 垂直于该子空间。
 
+**※【定义】** 逻辑回归
+$(x_{i},y_{i}),x_{i}\in \mathbb{R},y_{i}\in\{0,1\}$. 
+$\mathscr{L}(x,y,\alpha)=-\sum_{i=1}^n[y_{i}\ln p(x_{i})+(1-y_{i})\ln(1-p(x_{i}))]$. 
+损失函数基于KL散度$d_{KL}=\sum_{i=1}^np_{i}\ln \frac{p _{i}}{q_{i}}$导出. 对于特定$y_{i}$，概率是固定的.
+
 ## 5.3 Polynomial Regression
 
 当线性关系不足以捕捉数据模式时，建立多项式模型：
@@ -76,20 +81,26 @@ $\hat{y} = M_p(x) = \alpha_0 + \alpha_1 x + \alpha_2 x^2 + \ldots + \alpha_p x^p
 
 ### 5.5.1 岭回归的吉洪诺夫正则化(Tikhonov Regularization for Ridge Regression)
 
-引入参数 $s > 0$，新的成本函数为：
-$W_{\circ}(X,y,\alpha,s) = \frac{1}{n}\|X\alpha - y\|_2^2 + s\|\alpha\|_2^2$
-加入 $L_2$ 正则项 $s\|\alpha\|_2^2$ 会偏向于较小的 $\alpha$。小斜率模型更稳定，对 $x$ 的微小变化不敏感。解为：
-$\alpha_s^{\circ} = (X^T X + (s/n)I)^{-1} X^T y$
+引入正则化参数 $s > 0$，新的成本函数为：$W_{\circ}(X,y,\alpha,s) = \frac{1}{n}\|X\alpha - y\|_2^2 + s\|\alpha\|_2^2$.
+加入 $L_2$ 正则项 $s\|\alpha\|_2^2$ 会偏向于较小的 $\alpha$。小斜率模型更稳定，对 $x$ 的微小变化不敏感。（换言之，原本的线性回归对异常值的敏感度是比较高的）
+解为：$\alpha_s^{\circ} = (X^T X + snI)^{-1} X^T y$
 项 $(s/n)I$ 增加了矩阵的所有特征值，使得当 $X^T X$ 不满秩或特征值极小时，求逆变得数值稳定。
+
+*※【例题】* 对 $X=\begin{bmatrix}1 &  &   & \\ & \frac{1}{2} &  &  \\  &  & \dots &  \\  &  &  & \frac{1}{2^{10}}  \end{bmatrix}$ 不做修正 $X^TX$会非常之大。但是$s=0.01,n=100$，$(X^TX+nsI)$ 就能被改善很多。
 
 **※【例题】** 岭回归改进泛化
 对比 OLS ($s=0$) 和岭回归 ($s=0.01$)，在测试集上，带正则化的模型 SSE (361.30) 低于无正则化模型 (524.05)。
 
+*※【例题】* $W_{\circ}(X,y,\alpha,s) = \frac{1}{n}\|X\alpha - y\|_2^2 + s\|\alpha\|_2^2$
+$=\frac{1}{n}\|U^TX\alpha  - U^Ty\|_2^2 + s\|V^T\alpha\|_2^2=\frac{1}{n}\|\Sigma V^T\alpha  - U^Ty\|_2^2 + s\|V^T\alpha\|_2^2=\frac{1}{n}\|\Sigma \tilde{\alpha}  - \tilde{y}\|_2^2 + s\|\tilde{\alpha}\|_2^2$.
+又可以转化到对角阵的上。
 ### 5.5.2 套索(Lasso)
 
-将 $L_2$ 惩罚项替换为 $L_1$ 惩罚项：
-$W_{\circ}(X,y,\alpha,s) = \frac{1}{n}\|X\alpha - y\|_2^2 + s\|\alpha\|_1$
-这种形式不仅具有岭回归的稳健性，还能**产生稀疏解(sparse solutions)**。当 $s$ 足够大时，许多系数 $\alpha_j$ 会恰好变为 0。这对于高维数据的变量选择(variable selection)和模型解释非常有用。
+将 $L_2$ 惩罚项替换为 $L_1$ 惩罚项：$W_{\circ}(X,y,\alpha,s) = \frac{1}{n}\|X\alpha - y\|_2^2 + s\|\alpha\|_1$
+这种形式不仅具有岭回归的稳健性，还能**产生稀疏解(sparse solutions)**。
+当 $s$ 足够大时，许多系数 $\alpha_j$ 会恰好变为 0。
+这对于高维数据的变量选择(variable selection)和模型解释非常有用。
+但是 Lasso 没有显式解。
 
 ### 5.5.3 对偶约束形式(Dual Constrained Formulation)
 
@@ -104,9 +115,10 @@ $W_{\circ}(X,y,\alpha,s) = \frac{1}{n}\|X\alpha - y\|_2^2 + s\|\alpha\|_1$
 
 针对套索等无闭式解的问题，MP 提供了一种贪心算法。它迭代地揭示数据矩阵中能捕捉因变量趋势的特征子集。
 初始化残差 $r = y$，系数 $\alpha_j = 0$。每次迭代：
-1. 找到与残差最相关的列：$j^* = \arg\max_j |\langle r, X_j \rangle|$。
-2. 求解该维度上的最优系数：$\alpha_{j^*} = \arg\min_{\gamma} \|r - X_j\gamma\|^2 + s|\gamma|$。
-3. 更新残差：$r = r - X_j\alpha_{j^*}$。
+1. 找到与残差最相关的列：$j^* = \arg\max_j |\langle r, X_j \rangle|$.
+2. 求解该维度上的最优系数：$\alpha_{j^*} = \arg\min_{\gamma} \|r - X_j\gamma\|^2 + s|\gamma|$.
+3. 解得$\alpha _{j}=\frac{1}{X_{1}^TX_{1}}\left( \langle r, X_j \rangle-\text{sign}(\langle r, X_j \rangle) \frac{s}{2} \right)$.
+4. 更新残差：$r = r - X_j\alpha_{j^*}$.
 重复直到选择 $k$ 个特征或残差足够小。正交匹配追踪(Orthogonal Matching Pursuit)在每次更新后会重新拟合所有已选特征的系数，更不易陷入局部最优。
 
 **※【例题】** 信号恢复
