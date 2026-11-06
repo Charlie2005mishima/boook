@@ -256,8 +256,7 @@ $\mathbf{B}(1) = \mathbf{q}_n, \quad \mathbf{B}'(1) = n(\mathbf{q}_n - \mathbf{q
 $\mathbf{q}_0 = \mathbf{p}_j$, $\mathbf{q}_1 = \frac{1}{3}\gamma'(\mathbf{p}_j) + \mathbf{p}_j$, $\mathbf{q}_2 = \mathbf{p}_{j+1} - \frac{1}{3}\gamma'(\mathbf{p}_{j+1})$, $\mathbf{q}_3 = \mathbf{p}_{j+1}$。
 连接所有分段即得光滑的贝塞尔曲线拟合。
 
-
-
+## 6.11 chebyshev interpolation nodes
 
 **※【定义】** 切比雪夫多项式 $T_n(x)$ 
 - **定义一（三角函数形式）：**
