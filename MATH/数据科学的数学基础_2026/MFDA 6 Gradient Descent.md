@@ -16,7 +16,8 @@
 - 如果全局最小值或最大值只有一个点，则称为**严格的**。
 （注：仅使用“最小值”或“最大值”时，通常指代局部。）
 
-若函数在闭有界子集 $S$ 上连续，则其必定在 $S$ 上存在全局最小值和全局最大值（可能在边界上）。对于 $d>1$，**鞍点(Saddle point)** $\alpha$ 是指在任意邻域 $B_r(\alpha)$ 内，既存在使 $f(p) < f(\alpha)$ 的点，也存在使 $f(p') > f(\alpha)$ 的点，且上下区域不连通。如果上下区域各自连通且不是极值点，则称为**正则点(Regular point)**。
+若函数在闭有界子集 $S$ 上连续，则其必定在 $S$ 上存在全局最小值和全局最大值（可能在边界上）。
+对于 $d>1$，**鞍点(Saddle point)** $\alpha$ 是指在任意邻域 $B_r(\alpha)$ 内，既存在使 $f(p) < f(\alpha)$ 的点，也存在使 $f(p') > f(\alpha)$ 的点，且上下区域不连通。如果上下区域各自连通且不是极值点，则称为**正则点(Regular point)**。
 
 **※【例题】** 连续函数
 - 第一个函数有局部最小值和最大值。
@@ -53,8 +54,7 @@ $\nabla f$ 是一个从 $\mathbb{R}^d \to \mathbb{R}^d$ 的函数。
 
 **※【算法】** 梯度下降(Gradient Descent)：
 初始化 $\alpha^{(0)} = \alpha_{start} \in \mathbb{R}^d$；$k=0$。
-重复：
-$\alpha^{(k+1)} := \alpha^{(k)} - \gamma_k \nabla f(\alpha^{(k)})$
+重复：$\alpha^{(k+1)} := \alpha^{(k)} - \gamma_k \nabla f(\alpha^{(k)})$
 $k = k + 1$
 直到 $\|\nabla f(\alpha^{(k)})\| \leq \tau$。
 返回 $\alpha^{(k)}$。
@@ -78,18 +78,113 @@ $k = k + 1$
 - 若 $\gamma$ 太大（0.5），几乎在第一步就会越过极小值并在周围跳跃，不收敛。
 - 若 $\gamma = 0.3$，曲线平滑且较好地收敛到梯度范数极小的点。
 
+好的，我把缺失的收敛性证明补充在 **6.3.1 学习率** 之后。
+
+---
+
+### （补充）6.3.1 学习率(Learning Rate)与收敛性证明
+
+最关键参数 $\gamma$ 控制算法移动的步长。若 $\gamma$ 太大，接近极小值时可能越过极小值而不收敛；若太小，收敛速度太慢。
+
+在证明收敛性之前，我们需要引入两个关键的不等式（由泰勒展开和定义得出）：
+
+**※【引理】** 凸函数的一阶条件(First-order Condition for Convexity)：若 $f$ 是可微凸函数，则对任意 $\alpha, p \in \mathbb{R}^d$，有：
+$f(p) \geq f(\alpha) + \langle \nabla f(\alpha), p - \alpha \rangle$ (1.9)
+
+**※【引理】** 梯度利普希茨连续(Gradient Lipschitz Continuity)：若函数 $f$ 的梯度是 $L$-Lipschitz 的，即存在常数 $L > 0$，使得对所有 $\alpha, p \in \mathbb{R}^d$，有 $\|\nabla f(\alpha) - \nabla f(p)\| \leq L\|\alpha - p\|$。这等价于 $f$ 具有二次上界：
+$f(p) \leq f(\alpha) + \langle \nabla f(\alpha), p - \alpha \rangle + \frac{L}{2}\|p - \alpha\|^2$ (1.10)
+
+**※【引理】** 下降引理(Descent Lemma)：结合梯度下降的更新规则 $\alpha^{(k+1)} = \alpha^{(k)} - \gamma \nabla f(\alpha^{(k)})$ 和上面的二次上界（令 $p = \alpha^{(k+1)}$，$\alpha = \alpha^{(k)}$），我们可以推导出：
+$f(\alpha^{(k+1)}) \leq f(\alpha^{(k)}) + \langle \nabla f(\alpha^{(k)}), -\gamma \nabla f(\alpha^{(k)}) \rangle + \frac{L}{2}\|-\gamma \nabla f(\alpha^{(k)})\|^2$
+$f(\alpha^{(k+1)}) \leq f(\alpha^{(k)}) - \gamma\|\nabla f(\alpha^{(k)})\|^2 + \frac{L\gamma^2}{2}\|\nabla f(\alpha^{(k)})\|^2$
+$f(\alpha^{(k+1)}) \leq f(\alpha^{(k)}) - \gamma\left(1 - \frac{L\gamma}{2}\right)\|\nabla f(\alpha^{(k)})\|^2$ (1.11)
+为了保证函数值持续下降，我们需要 $1 - \frac{L\gamma}{2} > 0$，即 $\gamma < \frac{2}{L}$。若取 $\gamma = \frac{1}{L}$，则有：
+$f(\alpha^{(k+1)}) \leq f(\alpha^{(k)}) - \frac{1}{2L}\|\nabla f(\alpha^{(k)})\|^2$ (1.12)
+
+---
+
+#### 1. 凸且光滑函数的收敛性证明（$f$ 收敛）
+
+**※【定理】** 凸函数的梯度下降收敛性：假设 $f$ 是凸函数，且梯度是 $L$-Lipschitz 的，学习率设为 $\gamma = \frac{1}{L}$。设 $\alpha^*$ 是全局最小值点，经过 $k$ 步迭代后，有：
+$f(\alpha^{(k)}) - f(\alpha^*) \leq \frac{L}{2k}\|\alpha^{(0)} - \alpha^*\|^2$ (1.13)
+这表明函数值以 $O(1/k)$ 的速率收敛，即需要 $k = O(1/\varepsilon)$ 步达到误差 $\varepsilon$。
+
+**证明**：
+由梯度利普希茨连续（式 1.10），令 $p = \alpha^*$，$\alpha = \alpha^{(k)}$：
+$f(\alpha^*) \leq f(\alpha^{(k)}) + \langle \nabla f(\alpha^{(k)}), \alpha^* - \alpha^{(k)} \rangle + \frac{L}{2}\|\alpha^* - \alpha^{(k)}\|^2$
+由于 $f(\alpha^*) \leq f(\alpha^{(k)})$，利用凸性一阶条件（式 1.9）可得：
+$f(\alpha^{(k)}) - f(\alpha^*) \leq \langle \nabla f(\alpha^{(k)}), \alpha^{(k)} - \alpha^* \rangle - \frac{1}{2L}\|\nabla f(\alpha^{(k)})\|^2$ (利用 $\gamma = 1/L$ 以及 $\alpha^{(k)} - \alpha^{(k+1)} = \gamma \nabla f$ ) 
+其实更直接的推导是利用投影性质。考虑两点距离的递推：
+$\|\alpha^{(k+1)} - \alpha^*\|^2 = \|\alpha^{(k)} - \gamma \nabla f(\alpha^{(k)}) - \alpha^*\|^2$
+$= \|\alpha^{(k)} - \alpha^*\|^2 - 2\gamma \langle \nabla f(\alpha^{(k)}), \alpha^{(k)} - \alpha^* \rangle + \gamma^2\|\nabla f(\alpha^{(k)})\|^2$
+利用凸性，有 $f(\alpha^*) - f(\alpha^{(k)}) \geq \langle \nabla f(\alpha^{(k)}), \alpha^* - \alpha^{(k)} \rangle$，即 $\langle \nabla f(\alpha^{(k)}), \alpha^{(k)} - \alpha^* \rangle \geq f(\alpha^{(k)}) - f(\alpha^*)$。代入上式得：
+$\|\alpha^{(k+1)} - \alpha^*\|^2 \leq \|\alpha^{(k)} - \alpha^*\|^2 - 2\gamma(f(\alpha^{(k)}) - f(\alpha^*)) + \gamma^2\|\nabla f(\alpha^{(k)})\|^2$ (1.14)
+将下降引理（式 1.12）重排得：$\frac{1}{2L}\|\nabla f(\alpha^{(k)})\|^2 \leq f(\alpha^{(k)}) - f(\alpha^{(k+1)})$。代入式 1.14：
+$\|\alpha^{(k+1)} - \alpha^*\|^2 \leq \|\alpha^{(k)} - \alpha^*\|^2 - 2\gamma(f(\alpha^{(k)}) - f(\alpha^*)) + 2\gamma^2 L(f(\alpha^{(k)}) - f(\alpha^{(k+1)}))$
+令 $\gamma = 1/L$，化简得：
+$\|\alpha^{(k+1)} - \alpha^*\|^2 \leq \|\alpha^{(k)} - \alpha^*\|^2 - \frac{2}{L}(f(\alpha^{(k)}) - f(\alpha^*)) + \frac{2}{L}(f(\alpha^{(k)}) - f(\alpha^{(k+1)}))$
+将 $f(\alpha^{(k)}) - f(\alpha^{(k+1)})$ 移项，并利用 $f(\alpha^*) \leq f(\alpha^{(k+1)})$，得到：
+$f(\alpha^{(k)}) - f(\alpha^*) \leq \frac{L}{2} \left( \|\alpha^{(k)} - \alpha^*\|^2 - \|\alpha^{(k+1)} - \alpha^*\|^2 \right)$
+将 $k$ 从 $0$ 累加到 $k-1$（裂项求和）：
+$\sum_{i=0}^{k-1} (f(\alpha^{(i)}) - f(\alpha^*)) \leq \frac{L}{2} \left( \|\alpha^{(0)} - \alpha^*\|^2 - \|\alpha^{(k)} - \alpha^*\|^2 \right) \leq \frac{L}{2}\|\alpha^{(0)} - \alpha^*\|^2$
+因为 $f(\alpha^{(k)})$ 是单调递减的（由下降引理），所以 $f(\alpha^{(k)}) - f(\alpha^*)$ 是序列中最小的：
+$k(f(\alpha^{(k)}) - f(\alpha^*)) \leq \sum_{i=0}^{k-1} (f(\alpha^{(i)}) - f(\alpha^*)) \leq \frac{L}{2}\|\alpha^{(0)} - \alpha^*\|^2$
+两边除以 $k$，即得证 $f(\alpha^{(k)}) - f(\alpha^*) \leq \frac{L}{2k}\|\alpha^{(0)} - \alpha^*\|^2$。
+
+---
+
+#### 2. 强凸且光滑函数的收敛性证明（$f$ 与 $x$ 均收敛）
+
+**※【定理】** 强凸函数的梯度下降线性收敛性：假设 $f$ 是 $\eta$-强凸的，且梯度是 $L$-Lipschitz 的，学习率设为 $\gamma = \frac{1}{L}$。设 $\alpha^*$ 是唯一全局最小值点，则：
+$f(\alpha^{(k)}) - f(\alpha^*) \leq \left(1 - \frac{\eta}{L}\right)^k (f(\alpha^{(0)}) - f(\alpha^*))$ (1.15)
+$\|\alpha^{(k)} - \alpha^*\|^2 \leq \left(1 - \frac{\eta}{L}\right)^k \|\alpha^{(0)} - \alpha^*\|^2$ (1.16)
+这表明**函数值 $f(x)$ 和参数 $x$ 均以线性速率收敛**，需要 $k = O(\log(1/\varepsilon))$ 步即可达到误差 $\varepsilon$。
+
+**证明**：
+由强凸定义：$f(p) \geq f(\alpha) + \langle \nabla f(\alpha), p - \alpha \rangle + \frac{\eta}{2}\|p - \alpha\|^2$。
+在最优解 $\alpha^*$ 处，梯度为 0。代入 $p = \alpha^*$，$\alpha = \alpha^{(k)}$：
+$f(\alpha^*) \geq f(\alpha^{(k)}) + \langle \nabla f(\alpha^{(k)}), \alpha^* - \alpha^{(k)} \rangle + \frac{\eta}{2}\|\alpha^* - \alpha^{(k)}\|^2$
+由此可以得到函数值误差的下界与参数误差的关系。为了更直接地证明，我们对强凸的二次下界（令 $p=\alpha^*$）求导可知，强凸性等价于：
+$f(\alpha^{(k)}) - f(\alpha^*) \leq \langle \nabla f(\alpha^{(k)}), \alpha^{(k)} - \alpha^* \rangle - \frac{\eta}{2}\|\alpha^{(k)} - \alpha^*\|^2$
+结合凸性，我们有：
+$f(\alpha^{(k)}) - f(\alpha^*) \leq \frac{1}{2\eta}\|\nabla f(\alpha^{(k)})\|^2$ (1.17) （通过对二次函数求极小值得到）
+将式 1.17 代入下降引理（式 1.12）：
+$f(\alpha^{(k+1)}) \leq f(\alpha^{(k)}) - \frac{1}{2L}\|\nabla f(\alpha^{(k)})\|^2 \leq f(\alpha^{(k)}) - \frac{\eta}{L}(f(\alpha^{(k)}) - f(\alpha^*))$
+移项得：
+$f(\alpha^{(k+1)}) - f(\alpha^*) \leq \left(1 - \frac{\eta}{L}\right) (f(\alpha^{(k)}) - f(\alpha^*))$
+递推 $k$ 次即得式 1.15：**$f(x)$ 以线性速率收敛**。
+
+对于参数 $x$ 的收敛性，回到式 1.14：
+$\|\alpha^{(k+1)} - \alpha^*\|^2 \leq \|\alpha^{(k)} - \alpha^*\|^2 - 2\gamma(f(\alpha^{(k)}) - f(\alpha^*)) + \gamma^2\|\nabla f(\alpha^{(k)})\|^2$
+由于强凸性，有 $f(\alpha^{(k)}) - f(\alpha^*) \geq \frac{\eta}{2}\|\alpha^{(k)} - \alpha^*\|^2$，并且 $\|\nabla f(\alpha^{(k)})\|^2 \leq 2L(f(\alpha^{(k)}) - f(\alpha^*))$。代入得：
+$\|\alpha^{(k+1)} - \alpha^*\|^2 \leq \|\alpha^{(k)} - \alpha^*\|^2 - 2\gamma(1 - \gamma L)(f(\alpha^{(k)}) - f(\alpha^*))$
+代入 $\gamma = 1/L$ 和 $f(\alpha^{(k)}) - f(\alpha^*) \geq \frac{\eta}{2}\|\alpha^{(k)} - \alpha^*\|^2$：
+$\|\alpha^{(k+1)} - \alpha^*\|^2 \leq \|\alpha^{(k)} - \alpha^*\|^2 - \frac{1}{L}\eta\|\alpha^{(k)} - \alpha^*\|^2 = \left(1 - \frac{\eta}{L}\right) \|\alpha^{(k)} - \alpha^*\|^2$
+递推 $k$ 次即得式 1.16：**$x$ 以线性速率收敛**。
+
+---
+
+**※【例题】** 最小二乘法的梯度下降收敛性
+考虑目标函数 $f(\alpha) = \|A\alpha - b\|_2^2$（为了方便，假设没有系数 1/2）。矩阵 $A$ 的 Hessian 为 $\nabla^2 f = 2A^T A$。假设 $A$ 列满秩，其特征值为 $0 < \lambda_{min} \leq \ldots \leq \lambda_{max}$。
+则该函数的强凸参数 $\eta = 2\lambda_{min}$，Lipschitz 参数 $L = 2\lambda_{max}$。
+根据定理，若取学习率 $\gamma = \frac{1}{L} = \frac{1}{2\lambda_{max}}$，梯度下降将以如下速率收敛：
+$\|\alpha^{(k)} - \alpha^*\|^2 \leq \left(1 - \frac{\lambda_{min}}{\lambda_{max}}\right)^k \|\alpha^{(0)} - \alpha^*\|^2$
+这里的 $\frac{\lambda_{max}}{\lambda_{min}}$ 就是矩阵 $A^T A$ 的**条件数(Condition Number)**。条件数越大（特征值分布越不均匀），$1 - \frac{1}{\text{条件数}}$ 越接近 1，收敛就越慢。这也解释了为什么在实际应用中，我们需要对特征进行**标准化(Standardization)**来改善条件数，从而加速梯度下降。
+
 ## 6.4 拟合模型到数据(Fitting a Model to Data)
 
 在数据分析中，梯度下降常用于将模型拟合到数据。给定数据集 $(X,y) = \{(x_1,y_1), \dots, (x_n,y_n)\}$ 和由参数 $\alpha$ 定义的模型族 $M_\alpha$，定义损失函数 $L((X,y), M_\alpha)$ 衡量预测值与真实值的差异。目标函数为 $f(\alpha) = L((X,y), M_\alpha)$。例如，可以使用误差平方和 $f(\alpha) = \mathrm{SSE} = \sum_{i=1}^n (y_i - M_\alpha(x_i))^2$ (6.1)。
 
-**6.4.1 回归的最小均方更新(Least Mean Squares Updates)**
+### 6.4.1 回归的最小均方更新(Least Mean Squares Updates)
+
 以简单二次回归为例，参数 $k=3$，$\alpha = (\alpha_0, \alpha_1, \alpha_2)$，模型为 $M_\alpha(x_i) = \alpha_0 + \alpha_1 x_i + \alpha_2 x_i^2 = \langle \alpha, (1, x_i, x_i^2) \rangle$。
 对于单个数据点 $(x_1, y_1)$，代价 $f_1(\alpha) = (M_\alpha(x_1) - y_1)^2$。
 对 $\alpha_j$ 求偏导：$\frac{\mathrm{d}}{\mathrm{d}\alpha_j} f_1(\alpha) = 2(M_\alpha(x_1) - y_1) x_1^j$。
 梯度为：$\nabla f(\alpha) = 2(M_\alpha(x_1) - y_1)(1, x_1, x_1^2)$。
 按照 $\alpha := \alpha - \gamma \nabla f(\alpha)$ 进行更新，这被称为**最小均方(Least Mean Squares, LMS)** 更新规则或 **Widrow-Hoff 学习规则**。更新的幅度与残差 $(M_\alpha(x_1) - y_1)$ 成正比：误差大步伐大，误差小步伐小。
 
-**6.4.2 可分解函数(Decomposable Functions)**
+### 6.4.2 可分解函数(Decomposable Functions)
+
 当有多个数据点 $n > 1$ 时，利用代价函数的可分解性：$f(\alpha) = \sum_{i=1}^n f_i(\alpha)$。由于每个 $f_i$ 是凸的，它们的和 $f$ 也是凸的（如果特征向量满秩，通常是强凸的）。
 **批量梯度下降(Batch Gradient Descent)**：
 直接扩展单点的情况，利用导数的线性性质：
