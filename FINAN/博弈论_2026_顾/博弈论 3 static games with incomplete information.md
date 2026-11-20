@@ -50,7 +50,7 @@ $$
 $$
 - $N$：玩家集合。
 - $A_i$：玩家 $i$ 的行动空间。
-- $\Theta_i$：玩家 $i$ 的类型空间 (type space)。$\theta_i \in \Theta_i$ 为具体类型。
+- $\Theta_i$：玩家 $i$ 的类型空间 (type space)。$\theta_i \in \Theta_i$ 为具体类型。玩家特征。
 - $v_i: A \times \Theta \to \mathbb{R}$：支付函数，其中 $A = \times A_i$，$\Theta = \times \Theta_i$。
 - $\mathbb{P}$：共同先验 (common prior)，即类型组合 $\Theta$ 上的概率分布。
 
@@ -61,10 +61,12 @@ $$
 $$
 其中 $\mathbb{P}(\theta_i) = \sum_{\theta_{-i}' \in \Theta_{-i}} \mathbb{P}(\theta_i, \theta_{-i}')$ 为边缘分布。
 
-**※【定义】** 纯策略 (Pure strategy)：函数 $s_i: \Theta_i \to A_i$，即一个完整的依类型而定的行动计划 (type-contingent plan)。
+**※【定义】** 
+纯策略 (Pure strategy)：函数 $s_i: \Theta_i \to A_i$，即一个完整的依类型而定的行动计划 (type-contingent plan)。
 混合策略 (Mixed strategy)：函数 $\sigma_i: \Theta_i \to \Delta(A_i)$。
 
-**※【定义】** 贝叶斯纳什均衡 (Bayesian Nash Equilibrium, BNE)：策略组合 $s^* = (s_1^*, \dots, s_n^*)$ 是 BNE，如果对每个玩家 $i$ 及其每个类型 $\theta_i \in \Theta_i$，都有：
+**※【定义】** 贝叶斯纳什均衡 (Bayesian Nash Equilibrium, BNE)：
+策略组合 $s^* = (s_1^*, \dots, s_n^*)$ 是 BNE，如果对每个玩家 $i$ 及其每个类型 $\theta_i \in \Theta_i$，都有：
 $$
 \sum_{\theta_{-i}} \phi_i(\theta_{-i}|\theta_i) v_i(s_i^*(\theta_i), s_{-i}^*(\theta_{-i}); \theta_i, \theta_{-i}) \ge \sum_{\theta_{-i}} \phi_i(\theta_{-i}|\theta_i) v_i(a_i, s_{-i}^*(\theta_{-i}); \theta_i, \theta_{-i}), \quad \forall a_i \in A_i
 $$

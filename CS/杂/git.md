@@ -26,6 +26,44 @@
 `git add .` 将所有文件添加到暂存区
 `git commit -m 'first upload'` 添加说明
 `git push -u origin main` 上传
+`New-Item .gitignore -ItemType File` 新建gitignore，及其模板
+```
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.env
+
+# Jupyter
+.ipynb_checkpoints/
+
+# IDE
+.vscode/
+.idea/
+
+# Data
+data/
+*.parquet
+*.pkl
+*.npy
+*.npz
+
+# Model artifacts
+checkpoints/
+outputs/
+*.pt
+*.pth
+*.joblib
+
+# Logs
+logs/
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+```
 
 Workspace：工作区
 指您电脑文件系统上用于修改文件的目录。在这里，您可以创建、编辑和删除文件。

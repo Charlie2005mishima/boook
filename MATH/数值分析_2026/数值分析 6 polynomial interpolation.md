@@ -198,8 +198,9 @@ $\lambda(x) = \lambda_n(x; x_0, \dots, x_n) := \sum_{k=0}^n |\ell_k(x)|$ (6.42)
 
 **※【引理】** 勒贝格常数与勒贝格函数的关系为 $\Lambda_n = \max_{x \in [a,b]} \lambda(x)$ (6.43)。
 
-**※【定理】** 设 $p^*$ 为 $f$ 的最佳逼近多项式。设 $p = \mathcal{L}f$ 为在给定节点上的插值多项式。则
-$\|f - p\|_\infty \le (\Lambda_n + 1) \|f - p^*\|_\infty$ (6.45)
+**※【定理】** 设 $p^*$ 为 $f$ 的最佳逼近多项式。
+设 $p = \mathcal{L}f$ 为在给定节点上的插值多项式。
+则 $\|f - p\|_\infty \le (\Lambda_n + 1) \|f - p^*\|_\infty$ (6.45)
 
 **※【定理】** 插值误差受勒贝格常数控制。若节点等距，$\Lambda_n$ 随 $n$ 指数增长（如 $\Lambda_n \sim \frac{2^{n+1}}{en \log n}$）；若节点为切比雪夫零点，$\Lambda_n$ 仅对数增长（$\Lambda_n \sim \frac{2}{\pi} \log n$）。这就解释了为什么切比雪夫节点能有效避免龙格现象。
 

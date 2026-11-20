@@ -1,4 +1,4 @@
-
+ 
 **※【定义】** 最佳逼近(Best Approximation)：
 给定一个函数赋范向量空间 $Y$ 及其子空间 $X \subset Y$。
 如果函数 $\hat{\varphi} \in X$ 满足 $\forall \varphi \in X, \|f - \hat{\varphi}\| \leq \|f - \varphi\|$ (5.1)，则称 $\hat{\varphi}$ 为 $f \in Y$ 在 $X$ 中关于该范数的最佳逼近。
@@ -81,7 +81,7 @@ $\max_{x \in [a, b]} |f(x) - p^*(x)| \le \max_{x \in [a, b]} |f(x) - p(x)|$.
 **※【引理】** 最佳一致逼近 $p_n^*$ 的误差函数 $f - p_n^*$ 至少在 2 点交错。
 
 **※【定理】** 切比雪夫交错定理(Chebyshev alternating)：
-多项式 $p_n$ 是 $f \in \mathcal{C}[a,b]$ 在 $\mathbb{P}_n$ 中的最佳一致逼近，当且仅当 $f - p_n$ 在 $[a,b]$ 中的 $n+2$ 个点交错。
+多项式 $p_n$ 是 $f \in \mathcal{C}[a,b]$ 在 $\mathbb{P}_n$ 中的最佳一致逼近，当且仅当 $f - p_n$ 在 $[a,b]$ 中有 $n+2$ 个点交错。
 
 **证明**：
 充分性：假设 $E = f - p_n$ 在 $n+2$ 个点交错，但 $p_n$ 不是最佳逼近。设 $p_n^*$ 为最佳逼近，则 $\|f - p_n^*\|_\infty < \|E\|_\infty$。因此 $p_n - p_n^*$ 符号由 $E = f - p_n$ 决定，在这些点交替变号，根据介值定理至少有 $n+1$ 个不同的零点，但它是 $n$ 次多项式，只能恒为零，矛盾。
@@ -91,9 +91,12 @@ $\max_{x \in [a, b]} |f(x) - p^*(x)| \le \max_{x \in [a, b]} |f(x) - p(x)|$.
 
 **※【定理】** 如果 $f \in \mathcal{C}^{n+1}[a,b]$ 且 $f^{(n+1)}$ 在 $(a,b)$ 内没有零点，则 $f - p_n^*$ 极大交错于 $n+2$ 个点。
 
-**※【定理】** 最佳一致逼近的唯一性：对于任意 $f \in \mathcal{C}[a,b]$，在 $\mathbb{P}_n$ 中的最佳一致逼近是唯一的。
+**※【定理】** 最佳一致逼近的唯一性：
+对于任意 $f \in \mathcal{C}[a,b]$，在 $\mathbb{P}_n$ 中的最佳一致逼近是唯一的。
 
-**证明**：假设 $p_n$ 和 $p_n^*$ 是两个不同的最佳逼近。根据凸性，$q = (p_n + p_n^*)/2$ 也是最佳逼近。根据交错定理，$f - q$ 在 $x_1 < \cdots < x_{n+2}$ 处交错。这要求 $f - p_n$ 和 $f - p_n^*$ 在这些点也必须达到最大误差且符号相同。因此 $p_n$ 和 $p_n^*$ 在 $n+2$ 个点取值相同，从而它们必须是同一个多项式，矛盾。\(\square\)
+**证明**：假设 $p_n$ 和 $p_n^*$ 是两个不同的最佳逼近。
+根据凸性，$q = (p_n + p_n^*)/2$ 也是最佳逼近。
+根据交错定理，$f - q$ 在 $x_1 < \cdots < x_{n+2}$ 处交错。这要求 $f - p_n$ 和 $f - p_n^*$ 在这些点也必须达到最大误差且符号相同。因此 $p_n$ 和 $p_n^*$ 在 $n+2$ 个点取值相同，从而它们必须是同一个多项式，矛盾。\(\square\)
 
 **※【例题】** 对于 $B[a,b]$ 中的函数（如不连续函数），其最佳一致逼近存在但可能不唯一。
 
@@ -121,19 +124,45 @@ $\max_{x \in [a, b]} |f(x) - p^*(x)| \le \max_{x \in [a, b]} |f(x) - p(x)|$.
 
 **※【引理】** 伯恩斯坦算子 $B_n$ 是单调的。
 
+**※【引理】** 若 $f$ 是凸的，则 $B_{n}f$ 是凸的。
+
 **※【定理】** 魏尔斯特拉斯逼近定理(Weierstrass approximation)：
 任何连续函数 $f: [a,b] \to \mathbb{R}$ 都可以被多项式序列一致逼近到任意精度。
 即 $\forall f \in \mathcal{C}[a,b], \forall \epsilon > 0, \exists N \in \mathbb{N}^+ \text{ s.t. } \forall n > N, \exists p_n \in \mathbb{P}_n \text{ s.t. } \forall x \in [a,b], |p_n(x) - f(x)| < \epsilon$ (5.19)。
 
+对高维也是成立的. $f\in C[0,1]^d,\,\forall\,\varepsilon>0,\,\exists\,p\in \mathbb{P}_{n},\,\text{ s.t. }\|f-p\|_{\infty}<\varepsilon$.
+对伯恩斯坦多项式，例$d=2.B_{n}f(x,y)=\sum_{i=0}^n\sum_{j=0}^nf\left( \frac{i}{n}, \frac{j}{n} \right)b_{n,i}(x)b_{n,j}(y)$.
+
 **证明**：不失一般性设 $[a,b] = [0,1]$，取 $p_n = B_n f$。
-利用伯恩斯坦基的性质和 $f$ 的一致连续性，可以将 $|(B_n f)(t) - f(t)|$ 的误差分为 $|k/n - t| < \delta$ 和 $\ge \delta$ 两部分。前者由一致连续性控制，后者由方差恒等式 $\sum (k-nt)^2 b_{n,k}(t) = nt(1-t)$ 控制。最终可证得当 $n$ 充分大时，误差小于 $\epsilon$。\(\square\)
+利用伯恩斯坦基的性质和 $f$ 的一致连续性，可以将 $|(B_n f)(t) - f(t)|$ 的误差分为 $|k/n - t| < \delta$ 和 $\ge \delta$ 两部分。
+前者由一致连续性控制，后者由方差恒等式 $\sum (k-nt)^2 b_{n,k}(t) = nt(1-t)$ 控制。最终可证得当 $n$ 充分大时，误差小于 $\epsilon$。\(\square\)
+
+$f(t)-B_{n}f(t)=\sum_{k=0}^n\left( f(t)-f\left( \frac{k}{n} \right) \right)b_{n,k}(t)$ 
+$\implies|f(t)-B_{n}f(t)|\leq \sum_{|t-\frac{k}{n}|\leq\delta}+\sum_{|t-\frac{k}{n}|\geq\delta}|f(t)-f\left( \frac{k}{n} \right)|b_{n,k}(t)$ 
+$\implies\sum_{|t-\frac{k}{n}|\leq\delta}\varepsilon b_{n,k}(t)+2\|f\|_{\infty}\sum_{|t-\frac{k}{n}|\geq\delta} \frac{(nt-k)^{2}}{n^{2}\delta^{2}}b_{n,k}(t)$ 
 
 **※【推论】** 对于 $f \in \mathcal{C}[a,b]$，有极小极大误差 $E_n(f) \to 0$。
+$\|f-B_{n}f\|_{\infty}\to0$ as $n\to \infty$. $\Leftrightarrow$ $B_{n}f$ 一致收敛于 $f$.
+$\implies\,\cup_{n\geq0}\mathbb{P}_{n}$ 在 $C[0,1]$ 是稠密的
+
+*※【例题】*  深度学习网络版本的 Weierstrass定理
+$DNN_{N,L} =\{ A_{L}{\circ} \sigma {\circ}\dots A_{0}:A_{l}(x)=W_{l}x+b_{l},W_{l}\in\mathbb{R}^{N\times N},b_{l}\in \mathbb{R}^l,1\leq l\leq L-1,W_{L}\in \mathbb{R}^{N},W_{0}\in \mathbb{R}^{N\times d}\}$.
+$DNN_{N,L}\subset C[0,1]^d$. 
+$\cup_{N\ge 1}DNN_{N,1}$ 在 $C[0,1]^d$ 上是稠密的
+固定 $N$，$\cup_{L\ge 1}DNN_{N,1}$ 在 $C[0,1]^d$ 上是稠密的
+
+**※【命题】** 伯恩斯坦多项式的性质
+1. 伯恩斯坦多项式在凸性上有较好的保持
+2. 伯恩斯坦多项式的龙格效应并不显著
+3. 但伯恩斯坦多项式的收敛速度是比较慢的
+4. 在拟合精度上也远不如拉格朗日插值
 
 ## 5.4 连续模
 
 **※【定义】** 连续模(Modulus of continuity)：
-函数 $f$ 在 $[a,b]$ 上的连续模定义为 $\omega_{f,[a,b]}(\delta) = \sup_{x_1,x_2\in[a,b], |x_1-x_2|\le\delta} |f(x_1) - f(x_2)|$ (5.20)。
+函数 $f$ 在 $[a,b]$ 上的连续模
+定义为 $\omega_{f,[a,b]}(\delta) = \sup_{x_1,x_2\in[a,b], |x_1-x_2|\le\delta} |f(x_1) - f(x_2)|$ (5.20)。
+用来衡量 $f(x)$ 的一致连续程度。
 
 **※【例题】** 连续模的例子：
 - $f(x) = |x|$ 在 $[-1,1]$ 上：$\omega(\delta) = \delta$ (当 $\delta < 1$)。
@@ -143,31 +172,54 @@ $\max_{x \in [a, b]} |f(x) - p^*(x)| \le \max_{x \in [a, b]} |f(x) - p(x)|$.
 
 **※【引理】** 连续模的基本性质：
 - $|f(x_1) - f(x_2)| \le \omega_f(|x_1 - x_2|)$。
-- $\omega$ 是非减函数。
+- $\omega$ 是非减函数。$0<\delta_{1}\leq \delta_{2} \implies \omega_{f}(\delta_{1})\leq\omega_{f}(\delta_{2})$.
+- $\omega_{f}(n\delta)\leq n\omega_{f}(\delta)\,\forall\,n\in \mathbb{N}^+$.
+- $\omega_{f}(\lambda\delta)\leq\omega_{f}(\lceil \lambda \rceil\delta)$. 对于任意 $\lambda > 0$，有 $\omega(\lambda\delta) \le (1+\lambda)\omega(\delta)$。
 - $f$ 在 $[a,b]$ 上一致连续当且仅当 $\lim_{\delta \to 0^+} \omega_f(\delta) = 0$。
-- 对于任意 $\lambda > 0$，有 $\omega(\lambda\delta) \le (1+\lambda)\omega(\delta)$。
+- 若 $|f(t)-f(s)|\leq L|t-s|$，则$\omega_{f}(\delta)\leq L\delta$.
 
 **※【定理】** 若 $f \in B[0,1]$，则 $\|f - B_n f\|_\infty \le \frac{3}{2}\omega_f(\frac{1}{\sqrt{n}})$ (5.22)。
+
+证明：
+$f(t)-B_{n}f(t)=\sum_{k=0}^n\left( f(t)-f\left( \frac{k}{n} \right) \right)b_{n,k}(t)$ 
+$\implies|f(t)-B_{n}f(t)|\leq \sum_{k=0}^n \omega_{f}\left( |t-\frac{k}{n}| \right)b_{n,k}(t)$ 
+$\implies|f(t)-B_{n}f(t)|\leq \sum_{k=0}^n (1+|t\sqrt{ n }-\frac{k}{\sqrt{ n}}|)\omega_{f}\left( \frac{1}{\sqrt{ n }} \right)b_{n,k}(t)$ 
+$\implies|f(t)-B_{n}f(t)|\leq \omega_{f}\left( \frac{1}{\sqrt{ n }} \right)[1+\sqrt{ t(1-t) }]$ 
+有 $\sum_{k=0}^n|t-\frac{k}{n}|b_{n,k}(t)=\sum_{k=0}^n|t-\frac{k}{n}|\sqrt{ b_{n,k}(t) }\sqrt{ b_{n,k}(t) }$
+由柯西不等式 $\leq\left( \sum_{k=0}^n \left( t-\frac{k}{n} \right)^{2}b_{n,k}(t)\right)^{1/2}\left( \sum_{k=0}^nb_{n,k}(t) \right)^{1/2}=\frac{1}{\sqrt{ n }}\sqrt{ t(1-t) }$ 
 
 **※【推论】** 极小极大误差的弱估计：对于 $f \in B[0,1]$，$E_n(f) \le \frac{3}{2}\omega_f(\frac{1}{\sqrt{n}})$ (5.23)。
 
 **※【定义】** 若存在常数 $L>0$ 使得 $|f(x_1) - f(x_2)| \le L|x_1 - x_2|^\alpha$ (5.24)，则称 $f$ 满足 $\alpha$-赫尔德连续($\alpha$-Hölder continuous)（$\alpha=1$ 时为利普希茨连续）。
 
-**※【推论】** 若 $f$ 是 $\alpha$-赫尔德连续的，则 $E_n(f) = O(n^{-\alpha/2})$。
+**※【推论】** 若 $f$ 是Lip 函数，则 $\omega_{f}(\delta)\leq L\delta$, $E_n(f) = O(n^{-1/2})$。
+
+**※【推论】** 若 $f$ 是 $\alpha$-赫尔德连续的，则 $\omega_{f}(\delta)\leq L\delta^\alpha$, $E_n(f) = O(n^{-\alpha/2})$。
+
+**※【定理】** 若 $f$ 是 $C^\infty$的，则 $E_n(f) = O(n^{-1})$。
+
+**※【定理】** 若 $f$ 是 $C^\infty$的，对于拉格朗日插值基于切比雪夫节点，则 $E_n(f) = O(n^{-m}),\,\forall\,m\in \mathbb{N}$。
 
 ## 5.5 杰克逊定理(Jackson theorems)
 
-**※【定义】** 三角系统(Trigonometric system)：由 $1, \cos x, \sin x, \cos 2x, \sin 2x, \dots$ 构成的正交函数系。
+**※【定义】** 三角系统(Trigonometric system)：
+由 $1, \cos x, \sin x, \cos 2x, \sin 2x, \dots$ 构成的正交函数系。
 
-**※【定理】** 三角系统的正交性：在 $[-\pi,\pi]$ 上，不同频率的三角函数的内积为 0，同频率的余弦或正弦函数的内积为 $\pi$。
+**※【定理】** 三角系统的正交性：
+在 $[-\pi,\pi]$ 上，不同频率的三角函数的内积为 0，同频率的余弦或正弦函数的内积为 $\pi$。
 
-**※【定义】** 三角多项式(Trigonometric polynomial)：形式为 $T(\theta) = \frac{\alpha_0}{2} + \sum_{k=1}^n (\alpha_k \cos k\theta + \beta_k \sin k\theta)$ 的函数。若 $\beta_k=0$ 则为余弦多项式，$\alpha_k=0$ 则为正弦多项式。
+**※【定义】** 三角多项式(Trigonometric polynomial)：
+形式为 $T(\theta) = \frac{\alpha_0}{2} + \sum_{k=1}^n (\alpha_k \cos k\theta + \beta_k \sin k\theta)$ 的函数。
+若 $\beta_k=0$ 则为余弦多项式，$\alpha_k=0$ 则为正弦多项式。
 
 **※【引理】** 三角多项式为偶函数当且仅当它是余弦多项式，奇函数当且仅当它是正弦多项式。
 
-**※【定义】** 傅里叶系数(Fourier coefficients)：对于 $2\pi$ 周期函数 $g \in \mathcal{L}^1[-\pi,\pi]$，定义 $a_k = \frac{1}{\pi}\int_{-\pi}^\pi g(\phi)\cos k\phi \mathrm{d}\phi$，$b_k = \frac{1}{\pi}\int_{-\pi}^\pi g(\phi)\sin k\phi \mathrm{d}\phi$ (5.26)。
+**※【定义】** 傅里叶系数(Fourier coefficients)：
+对于 $2\pi$ 周期函数 $g \in \mathcal{L}^1[-\pi,\pi]$，
+定义 $a_k = \frac{1}{\pi}\int_{-\pi}^\pi g(\phi)\cos k\phi \mathrm{d}\phi$，$b_k = \frac{1}{\pi}\int_{-\pi}^\pi g(\phi)\sin k\phi \mathrm{d}\phi$ (5.26)。
 
-**※【定义】** 修改的部分和(Modified partial sum)：$q_n(g;\theta) = \frac{a_0}{2} + \sum_{k=1}^n \rho_{k,n} (a_k \cos k\theta + b_k \sin k\theta)$ (5.27)。
+**※【定义】** 修改的部分和(Modified partial sum)：
+$q_n(g;\theta) = \frac{a_0}{2} + \sum_{k=1}^n \rho_{k,n} (a_k \cos k\theta + b_k \sin k\theta)$ (5.27)。
 
 **※【引理】** 修改的部分和可以表示为积分形式 $q_n(g;\theta) = \frac{1}{\pi}\int_{-\pi}^\pi g(\phi+\theta)u_n(\phi)\mathrm{d}\phi$，其中 $u_n$ 为余弦多项式。
 
@@ -175,7 +227,11 @@ $\max_{x \in [a, b]} |f(x) - p^*(x)| \le \max_{x \in [a, b]} |f(x) - p(x)|$.
 
 **※【推论】** 任何 $2\pi$ 周期连续函数都可以被三角多项式序列一致逼近（魏尔斯特拉斯定理的三角多项式版本）。
 
-**※【定理】** 对于代数多项式逼近，若 $f \in B[-1,1]$，则 $E_n(f) \le 6\omega_f(\frac{1}{n})$ (5.39)。
+**※【定理】** Jackson 定理
+对于代数多项式逼近，若 $f \in B[-1,1]$，则 $E_n(f) \le 6\omega_f(\frac{1}{n})$ (5.39)。
+
+**※【定理】** 高阶 Jackson 定理
+若 $f\in C^r,\,r\geq0$，则$E_{n}(f)\leq C \frac{1}{n^r}\omega_{f^{(r)}}\left( \frac{1}{n} \right)$. 
 
 **证明**：构造 $g(\theta) = f(\cos\theta)$，将其转化为三角多项式逼近，利用偶数最佳逼近 $q_n^*$，再将其转换为关于 $\cos\theta$ 的多项式 $p_n(\cos\theta)$，从而得到关于 $x$ 的多项式逼近误差界。\(\square\)
 

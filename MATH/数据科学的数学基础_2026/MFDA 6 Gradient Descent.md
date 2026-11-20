@@ -61,7 +61,8 @@ $k = k + 1$
 
 **停止条件(Stopping Condition)**：参数 $\tau$ 是容差。在极小值点 $\alpha^*$ 处梯度为 0，所以当 $\alpha$ 接近极小值时，梯度范数应当很小。常用 $\|\nabla f\|$ 作为代理指标。有时也使用固定步数 $T$。
 
-**6.3.1 学习率(Learning Rate)**
+### 6.3.1 学习率(Learning Rate)
+
 最关键参数 $\gamma$ 控制算法移动的步长。若 $\gamma$ 太大，接近极小值时可能越过极小值而不收敛；若太小，收敛速度太慢。
 **Lipschitz 界**：函数 $g$ 是 $L$-Lipschitz 的，如果对所有 $p,q$，有 $\|g(p) - g(q)\| \leq L\|p - q\|$。如果梯度 $\nabla f$ 是 $L$-Lipschitz 的，且设置 $\gamma \leq 1/L$，梯度下降将收敛到驻点。对于凸函数，经过最多 $k = C/\varepsilon$ 步可保证 $f(\alpha^{(k)}) - f(\alpha^*) \leq \varepsilon$。
 **强凸函数(Strongly Convex Functions)**：函数 $f$ 是 $\eta$-强凸的，如果 $f(p) \geq f(\alpha) + \langle \nabla f(\alpha), p - \alpha \rangle + \frac{\eta}{2}\|p - \alpha\|^2$。这意味着 $f$ 被一个二次函数下界约束。
@@ -78,98 +79,359 @@ $k = k + 1$
 - 若 $\gamma$ 太大（0.5），几乎在第一步就会越过极小值并在周围跳跃，不收敛。
 - 若 $\gamma = 0.3$，曲线平滑且较好地收敛到梯度范数极小的点。
 
-好的，我把缺失的收敛性证明补充在 **6.3.1 学习率** 之后。
+这里统一一下符号避免混淆：在优化中$,\eta$ 通常指学习率，所以你题目里的 $\eta_*$ 其实指代的是**最优解参数**（通常记为 $\theta^*$），而 $\eta_t$ 指代的是第 $t$ 步的参数 $\theta_t$。学习率我们用 $\gamma$ 表示。
+
+以下是最小二乘法梯度下降收敛性的完整证明笔记。
+
+### 最小二乘法梯度下降收敛性证明
+
+考虑线性最小二乘问题(Linear Least Squares)：
+$F(\theta) = \frac{1}{2}\|X\theta - y\|_2^2$
+其中 $X \in \mathbb{R}^{n \times d}$ 为数据矩阵$,y \in \mathbb{R}^n$ 为标签向量$,\theta \in \mathbb{R}^d$ 为待求参数。
+
+**※【定义】** 海森矩阵(Hessian Matrix)：
+对于目标函数 $F(\theta)$，其海森矩阵为二阶导数矩阵，记为 $H = \nabla^2 F(\theta) = X^T X$。由于 $X^T X$ 是半正定矩阵，故 $F(\theta)$ 为凸函数。
+
+**※【定义】** 梯度下降(Gradient Descent)更新规则：
+$\theta_{t+1} = \theta_t - \gamma \nabla F(\theta_t)$，其中 $\gamma > 0$ 为学习率$,\nabla F(\theta) = X^T(X\theta - y) = H\theta - X^T y$。
+
+**※【定理】** 最优解条件：设最优解为 $\theta^*$，由于 $F(\theta)$ 是凸函数，最优解满足 $\nabla F(\theta^*) = 0$，即 $H\theta^* = X^T y$。
+
+**※【引理】** 目标函数在任意点 $\theta$ 与最优解 $\theta^*$ 的差值，可以表示为：
+$F(\theta) - F(\theta^*) = \frac{1}{2}(\theta - \theta^*)^T H (\theta - \theta^*)$
+
+**证明：**
+展开 $F(\theta)$：
+$\begin{align}F(\theta)  & = \frac{1}{2}(X\theta - y)^T(X\theta - y)   \\  & = \frac{1}{2}\theta^T X^T X \theta - y^T X \theta + \frac{1}{2}y^T y  \\  &= \frac{1}{2}\theta^T H \theta - y^T X \theta + \frac{1}{2}y^T y\end{align}$.
+
+代入最优解条件 $X^T y = H\theta^*$：
+$F(\theta) = \frac{1}{2}\theta^T H \theta - (H\theta^*)^T \theta + \frac{1}{2}y^T y = \frac{1}{2}\theta^T H \theta - (\theta^*)^T H \theta + \frac{1}{2}y^T y$.
+同时计算最优点的函数值：
+$F(\theta^*) = \frac{1}{2}(\theta^*)^T H \theta^* - (\theta^*)^T H \theta^* + \frac{1}{2}y^T y = -\frac{1}{2}(\theta^*)^T H \theta^* + \frac{1}{2}y^T y$.
+将两式相减：$F(\theta) - F(\theta^*) = \frac{1}{2}\theta^T H \theta - (\theta^*)^T H \theta + \frac{1}{2}(\theta^*)^T H \theta^*$.
+配方并利用 $H$ 的对称性：$F(\theta) - F(\theta^*) = \frac{1}{2}(\theta - \theta^*)^T H (\theta - \theta^*)$.
+得证。
+
+**※【引理】** 第 $t$ 步迭代的参数 $\theta_t$ 与最优解 $\theta^*$ 的误差，满足：
+$\theta_t - \theta^* = (I - \gamma H)^t (\theta_0 - \theta^*)$
+
+**证明：**
+根据梯度下降更新规则：
+$\theta_{t+1} = \theta_t - \gamma \nabla F(\theta_t) = \theta_t - \gamma(H\theta_t - X^T y)$
+代入 $X^T y = H\theta^*$：
+$\theta_{t+1} = \theta_t - \gamma H\theta_t + \gamma H\theta^*$
+两边同时减去 $\theta^*$：
+$\theta_{t+1} - \theta^* = \theta_t - \theta^* - \gamma H(\theta_t - \theta^*) = (I - \gamma H)(\theta_t - \theta^*)$
+这是一个递推关系，展开 $t$ 步即可得到：
+$\theta_t - \theta^* = (I - \gamma H)^t (\theta_0 - \theta^*)$
+得证。
+
+**※【定理】** 对于最小二乘问题，若学习率 $\gamma$ 满足 $0 < \gamma < \frac{2}{\lambda_{\max}(H)}$ （其中 $\lambda_{\max}(H)$ 为矩阵 $H$ 的最大特征值），则梯度下降算法线性收敛，即当 $t \to \infty$ 时$,\theta_t \to \theta^*$，且 $F(\theta_t) \to F(\theta^*)$。
+
+**证明：**
+由于 $H = X^T X$ 是实对称矩阵，可正交对角化：$H = Q \Lambda Q^T$，其中 $Q$ 是正交矩阵（$Q^T Q = I$）$,\Lambda = \text{diag}(\lambda_1, \lambda_2, \dots, \lambda_d)$ 是特征值构成的对角矩阵，且 $\lambda_i \ge 0$。
+
+根据引理二：
+$\theta_t - \theta^* = (I - \gamma H)^t (\theta_0 - \theta^*) = (Q I Q^T - \gamma Q \Lambda Q^T)^t (\theta_0 - \theta^*) = Q (I - \gamma \Lambda)^t Q^T (\theta_0 - \theta^*)$
+
+定义对角矩阵 $D = I - \gamma \Lambda$，其对角元素为 $d_i = 1 - \gamma \lambda_i$。
+为了让误差收敛到零，即 $\lim_{t \to \infty} (I - \gamma H)^t = 0$，矩阵 $D^t$ 的所有对角元素必须趋于零。这要求对所有的 $i$，有 $|1 - \gamma \lambda_i| < 1$。
+即：
+$-1 < 1 - \gamma \lambda_i < 1$
+$0 < \gamma \lambda_i < 2$
+对于所有特征值 $\lambda_i > 0$，必须满足 $\gamma < \frac{2}{\lambda_i}$。即 $\gamma < \frac{2}{\lambda_{\max}(H)}$。
+在此条件下，当 $t \to \infty$ 时$,\theta_t \to \theta^*$。
+
+接下来证明函数值也收敛。
+根据引理一，函数值误差：
+$F(\theta_t) - F(\theta^*) = \frac{1}{2} (\theta_t - \theta^*)^T H (\theta_t - \theta^*)$
+代入引理二的误差表达式：
+$F(\theta_t) - F(\theta^*) = \frac{1}{2} (Q (I - \gamma \Lambda)^t Q^T (\theta_0 - \theta^*))^T (Q \Lambda Q^T) (Q (I - \gamma \Lambda)^t Q^T (\theta_0 - \theta^*))$
+由于 $Q^T Q = I$，化简为：
+$F(\theta_t) - F(\theta^*) = \frac{1}{2} (\theta_0 - \theta^*)^T Q (I - \gamma \Lambda)^{2t} \Lambda Q^T (\theta_0 - \theta^*)$
+这是一个关于 $t$ 的指数衰减项。
+设最大特征值为 $\lambda_{\max}$，则有：
+$F(\theta_t) - F(\theta^*) \le (1 - \gamma \lambda_{\min})^{2t} (F(\theta_0) - F(\theta^*))$ （当 $H$ 正定时）
+或者只要满足 $0 < \gamma < \frac{2}{\lambda_{\max}(H)}$，随着 $t \to \infty$$,(I - \gamma \Lambda)^{2t} \to 0$，因此 $F(\theta_t) \to F(\theta^*)$。
+得证。
+
+**※【例题】** 假设一维二次函数 $F(\theta) = \frac{1}{2} \cdot 2 \cdot \theta^2$，即 $H = 2$（最大特征值为2），最优点 $\theta^* = 0$。若初始点 $\theta_0 = 1$。
+根据定理，学习率应满足 $0 < \gamma < \frac{2}{2} = 1$。
+若取 $\gamma = 0.5$，则迭代变为：
+$\theta_{t+1} - 0 = (1 - 0.5 \cdot 2)(\theta_t - 0) = 0 \cdot \theta_t = 0$。一步直接收敛。
+若取 $\gamma = 0.9$，则 $\theta_{t+1} = (1 - 1.8)\theta_t = -0.8\theta_t$。虽然符号震荡，但绝对值以 $0.8$ 的比例缩小，最终收敛。
+若取 $\gamma = 1.1$（超出范围），则 $\theta_{t+1} = (1 - 2.2)\theta_t = -1.2\theta_t$。此时 $|1 - \gamma \lambda| = 1.2 > 1$，误差会逐渐发散，无法收敛。
+
+**※【定义】** 条件数(Condition Number)：对于半正定矩阵 $H$，若其最小特征值 $\mu > 0$，则定义条件数为 $\kappa = \frac{L}{\mu}$。当 $\mu=0$ 时，条件数趋于无穷。
+
+**※【定理】** **收敛率界（Convergence Rate Bound）**
+$F(\theta _{t})-F(\eta_{*})\leq \begin{cases}\left( 1-\frac{1}{\kappa} \right)^{2t}(F(\theta_{0})-F(\eta_{*})) & \mu>0 \\  \frac{1}{4t\gamma}\|\theta_{0}-\eta_{*}\|_{2}^2 & \mu=0\end{cases}$
+
+**情况一：当 $\mu > 0$ 时（强凸情况）**
+当 $H$ 满秩（即数据矩阵 $X$ 列满秩$,\mu > 0$）时，我们可以使用步长 $\gamma = \frac{1}{L}$。
+
+**证明：**
+根据特征值分解 $H = Q \Lambda Q^T$，有：
+$F(\theta_t) - F(\theta^*) = \frac{1}{2}(\theta_0 - \theta^*)^T (I - \gamma H)^{2t} H (\theta_0 - \theta^*)$
+将其展开为特征值 $\lambda_i$ 的形式：
+$F(\theta_t) - F(\theta^*) = \frac{1}{2} \sum_{i=1}^d (1 - \gamma \lambda_i)^{2t} \lambda_i |q_i^T(\theta_0 - \theta^*)|^2$
+我们希望把 $(1 - \gamma \lambda_i)^{2t} \lambda_i$ 放大成一个与 $i$ 无关的常数倍。
+因为 $\lambda_i \in [\mu, L]$，且 $\gamma = \frac{1}{L}$，所以 $1 - \gamma \lambda_i = 1 - \frac{\lambda_i}{L}$。
+当 $\lambda_i = \mu$ 时，因子取得最大值 $1 - \frac{\mu}{L} = 1 - \frac{1}{\kappa}$。
+因此，对于所有的 $i$，都有：
+$(1 - \gamma \lambda_i)^{2t} \lambda_i \leq \left(1 - \frac{1}{\kappa}\right)^{2t} \lambda_i$
+将其代回求和式中：
+$F(\theta_t) - F(\theta^*) \leq \left(1 - \frac{1}{\kappa}\right)^{2t} \frac{1}{2} \sum_{i=1}^d \lambda_i |q_i^T(\theta_0 - \theta^*)|^2$
+而后面那一坨恰好就是初始的误差：
+$\frac{1}{2} \sum_{i=1}^d \lambda_i |q_i^T(\theta_0 - \theta^*)|^2 = \frac{1}{2}(\theta_0 - \theta^*)^T H (\theta_0 - \theta^*) = F(\theta_0) - F(\theta^*)$
+得证：
+$F(\theta_t) - F(\theta^*) \leq \left(1 - \frac{1}{\kappa}\right)^{2t} (F(\theta_0) - F(\theta^*))$
+
+**情况二：当 $\mu = 0$ 时（弱凸情况，即仅凸非强凸）**
+
+当 $H$ 不满秩（存在特征值为 $0$）时$,1 - \gamma \lambda_i$ 的最小可能值是 $1$（当 $\lambda_i=0$ 时）。此时不能用指数衰减（线性收敛），只能退化为 **$O(1/t)$ 的次线性收敛**。
+
+**证明：**
+令步长 $\gamma = \frac{1}{L}$，我们要证明对于任意 $\lambda \in [0, L]$，都有：$(1 - \gamma \lambda)^{2t} \lambda \leq \frac{1}{4\gamma t}$ 
+
+考虑函数 $g(\lambda) = (1 - \gamma \lambda)^{2t} \lambda$，对其求导：
+$g'(\lambda) = -2t\gamma (1 - \gamma \lambda)^{2t-1} \lambda + (1 - \gamma \lambda)^{2t}$.
+令 $g'(\lambda) = 0$：$(1 - \gamma \lambda)^{2t-1} [ -2t\gamma \lambda + 1 - \gamma \lambda ] = 0$.
+解得驻点：$\lambda = \frac{1}{\gamma(2t + 1)}$.
+将驻点代回 $g(\lambda)$：$g_{\text{max}} = \left(1 - \frac{1}{2t+1}\right)^{2t} \frac{1}{\gamma(2t+1)} = \left(\frac{2t}{2t+1}\right)^{2t} \frac{1}{\gamma(2t+1)}$.
+我们知道 $\lim_{t \to \infty} (1 + \frac{1}{x})^x = e$，所以 $\left(\frac{2t}{2t+1}\right)^{2t} < 1$。
+因此：
+$g_{\text{max}} < \frac{1}{\gamma(2t+1)} < \frac{1}{2\gamma t}$.
+
+将其代回求和式：
+$F(\theta_t) - F(\theta^*) = \frac{1}{2} \sum_{i=1}^d g(\lambda_i) |q_i^T(\theta_0 - \theta^*)|^2 \leq \frac{1}{2} \cdot \frac{1}{2\gamma t} \sum_{i=1}^d |q_i^T(\theta_0 - \theta^*)|^2$
+因为 $Q$ 是正交矩阵$,\sum_{i=1}^d |q_i^T(\theta_0 - \theta^*)|^2 = \|\theta_0 - \theta^*\|_2^2$。
+所以：$F(\theta_t) - F(\theta^*) \leq \frac{1}{4\gamma t} \|\theta_0 - \theta^*\|_2^2$.
 
 ---
 
-### （补充）6.3.1 学习率(Learning Rate)与收敛性证明
+**※【例题】** 为什么 $\mu=0$ 时只能达到 $O(1/t)$？
+考虑一维函数 $F(\theta) = \theta^2$，但这是受限数据下的特例。假设 $H=0$，即目标函数是常数 $F(\theta)=0$，那么梯度为0，不下降。
+我们看一个真正的奇异矩阵例子：假设 $H = \begin{bmatrix} 0 & 0 \\ 0 & 1 \end{bmatrix}$，即 $F(\theta) = \frac{1}{2}\theta_2^2$。最优解集是 $\theta^* = (c, 0)$，其中 $c$ 为任意常数。
+设初始点 $\theta_0 = (1, 1)$，步长 $\gamma = 1$（即 $L=1$）。
+梯度更新：$\theta_{t+1} = \theta_t - H\theta_t = (I-H)\theta_t$
+其中 $I-H = \begin{bmatrix} 1 & 0 \\ 0 & 0 \end{bmatrix}$。
+迭代轨迹：
+$\theta_1 = (1, 0)$
+$\theta_2 = (1, 0)$
+可以看到，第一维的参数 $\theta_1$ 永远停留在 $1$，无法收敛到最优点 $(0,0)$。**但是，函数值收敛了**：因为 $F(\theta_1) = 0$，这等于最优点时的函数值。
+因为参数 $\theta$ 没有完全收敛（存在零空间误差），我们不能再用范数 $\|\theta_0 - \theta^*\|$ 的指数衰减来约束，而必须用 $O(1/t)$ 这种更宽松的界来描述函数值的收敛。
 
-最关键参数 $\gamma$ 控制算法移动的步长。若 $\gamma$ 太大，接近极小值时可能越过极小值而不收敛；若太小，收敛速度太慢。
+## 凸优化（Convex Optimization）
 
-在证明收敛性之前，我们需要引入两个关键的不等式（由泰勒展开和定义得出）：
+### 凸函数（Convex Function）
 
-**※【引理】** 凸函数的一阶条件(First-order Condition for Convexity)：若 $f$ 是可微凸函数，则对任意 $\alpha, p \in \mathbb{R}^d$，有：
-$f(p) \geq f(\alpha) + \langle \nabla f(\alpha), p - \alpha \rangle$ (1.9)
+**※【定义】** 凸函数(Convex Function)
+设 $F:\mathbb R^d\to\mathbb R$。若对任意 $\theta,\eta\in\mathbb R^d$ 及 $\lambda\in[0,1]$，均有
+$F(\lambda\eta+(1-\lambda)\theta)\leq\lambda F(\eta)+(1-\lambda)F(\theta)$，
+则称 $F$ 为凸函数。几何上，函数图像上任意两点间的弦位于图像上方。
 
-**※【引理】** 梯度利普希茨连续(Gradient Lipschitz Continuity)：若函数 $f$ 的梯度是 $L$-Lipschitz 的，即存在常数 $L > 0$，使得对所有 $\alpha, p \in \mathbb{R}^d$，有 $\|\nabla f(\alpha) - \nabla f(p)\| \leq L\|\alpha - p\|$。这等价于 $f$ 具有二次上界：
-$f(p) \leq f(\alpha) + \langle \nabla f(\alpha), p - \alpha \rangle + \frac{L}{2}\|p - \alpha\|^2$ (1.10)
+**※【定理】** 凸函数的一阶判别法
+设 $F:\mathbb R^d\to\mathbb R$ 可微，则 $F$ 为凸函数，当且仅当对任意 $\theta,\eta\in\mathbb R^d$，有
+$F(\eta)\geq F(\theta)+\nabla F(\theta)^T(\eta-\theta)$。
+即函数图像始终位于任意一点的切平面(Tangent Hyperplane)之上。
 
-**※【引理】** 下降引理(Descent Lemma)：结合梯度下降的更新规则 $\alpha^{(k+1)} = \alpha^{(k)} - \gamma \nabla f(\alpha^{(k)})$ 和上面的二次上界（令 $p = \alpha^{(k+1)}$，$\alpha = \alpha^{(k)}$），我们可以推导出：
-$f(\alpha^{(k+1)}) \leq f(\alpha^{(k)}) + \langle \nabla f(\alpha^{(k)}), -\gamma \nabla f(\alpha^{(k)}) \rangle + \frac{L}{2}\|-\gamma \nabla f(\alpha^{(k)})\|^2$
-$f(\alpha^{(k+1)}) \leq f(\alpha^{(k)}) - \gamma\|\nabla f(\alpha^{(k)})\|^2 + \frac{L\gamma^2}{2}\|\nabla f(\alpha^{(k)})\|^2$
-$f(\alpha^{(k+1)}) \leq f(\alpha^{(k)}) - \gamma\left(1 - \frac{L\gamma}{2}\right)\|\nabla f(\alpha^{(k)})\|^2$ (1.11)
-为了保证函数值持续下降，我们需要 $1 - \frac{L\gamma}{2} > 0$，即 $\gamma < \frac{2}{L}$。若取 $\gamma = \frac{1}{L}$，则有：
-$f(\alpha^{(k+1)}) \leq f(\alpha^{(k)}) - \frac{1}{2L}\|\nabla f(\alpha^{(k)})\|^2$ (1.12)
+**※【定理】** 凸函数的二阶判别法
+设 $F:\mathbb R^d\to\mathbb R$ 二阶可微，则 $F$ 为凸函数，当且仅当对任意 $\theta\in\mathbb R^d$，有 $\nabla^2F(\theta)\succeq0$。
+其中 $\nabla^2F(\theta)$ 为海森矩阵(Hessian Matrix)$,\succeq0$ 表示半正定(Positive Semidefinite, PSD)。
 
----
+**※【定理】** 詹森不等式(Jensen's Inequality)
+设随机向量 $X$ 与 $F(X)$ 的期望存在，且 $F$ 为凸函数，则 $F(\mathbb E[X])\leq\mathbb E[F(X)]$。
 
-#### 1. 凸且光滑函数的收敛性证明（$f$ 收敛）
+**※【推论】** 凸函数的非负线性组合
+设 $F_1,\ldots,F_n$ 均为凸函数$,a_1,\ldots,a_n\geq0$，则 $F(\theta)=\sum_{i=1}^n a_iF_i(\theta)$ 仍为凸函数。
 
-**※【定理】** 凸函数的梯度下降收敛性：假设 $f$ 是凸函数，且梯度是 $L$-Lipschitz 的，学习率设为 $\gamma = \frac{1}{L}$。设 $\alpha^*$ 是全局最小值点，经过 $k$ 步迭代后，有：
-$f(\alpha^{(k)}) - f(\alpha^*) \leq \frac{L}{2k}\|\alpha^{(0)} - \alpha^*\|^2$ (1.13)
-这表明函数值以 $O(1/k)$ 的速率收敛，即需要 $k = O(1/\varepsilon)$ 步达到误差 $\varepsilon$。
+**※【推论】** 范数的凸性
+任意范数 $\|\cdot\|$ 均为凸函数。对任意 $\theta,\eta\in\mathbb R^d$ 及 $\lambda\in[0,1]$，有
+$\|\lambda\theta+(1-\lambda)\eta\|\leq\lambda\|\theta\|+(1-\lambda)\|\eta\|$。
 
-**证明**：
-由梯度利普希茨连续（式 1.10），令 $p = \alpha^*$，$\alpha = \alpha^{(k)}$：
-$f(\alpha^*) \leq f(\alpha^{(k)}) + \langle \nabla f(\alpha^{(k)}), \alpha^* - \alpha^{(k)} \rangle + \frac{L}{2}\|\alpha^* - \alpha^{(k)}\|^2$
-由于 $f(\alpha^*) \leq f(\alpha^{(k)})$，利用凸性一阶条件（式 1.9）可得：
-$f(\alpha^{(k)}) - f(\alpha^*) \leq \langle \nabla f(\alpha^{(k)}), \alpha^{(k)} - \alpha^* \rangle - \frac{1}{2L}\|\nabla f(\alpha^{(k)})\|^2$ (利用 $\gamma = 1/L$ 以及 $\alpha^{(k)} - \alpha^{(k+1)} = \gamma \nabla f$ ) 
-其实更直接的推导是利用投影性质。考虑两点距离的递推：
-$\|\alpha^{(k+1)} - \alpha^*\|^2 = \|\alpha^{(k)} - \gamma \nabla f(\alpha^{(k)}) - \alpha^*\|^2$
-$= \|\alpha^{(k)} - \alpha^*\|^2 - 2\gamma \langle \nabla f(\alpha^{(k)}), \alpha^{(k)} - \alpha^* \rangle + \gamma^2\|\nabla f(\alpha^{(k)})\|^2$
-利用凸性，有 $f(\alpha^*) - f(\alpha^{(k)}) \geq \langle \nabla f(\alpha^{(k)}), \alpha^* - \alpha^{(k)} \rangle$，即 $\langle \nabla f(\alpha^{(k)}), \alpha^{(k)} - \alpha^* \rangle \geq f(\alpha^{(k)}) - f(\alpha^*)$。代入上式得：
-$\|\alpha^{(k+1)} - \alpha^*\|^2 \leq \|\alpha^{(k)} - \alpha^*\|^2 - 2\gamma(f(\alpha^{(k)}) - f(\alpha^*)) + \gamma^2\|\nabla f(\alpha^{(k)})\|^2$ (1.14)
-将下降引理（式 1.12）重排得：$\frac{1}{2L}\|\nabla f(\alpha^{(k)})\|^2 \leq f(\alpha^{(k)}) - f(\alpha^{(k+1)})$。代入式 1.14：
-$\|\alpha^{(k+1)} - \alpha^*\|^2 \leq \|\alpha^{(k)} - \alpha^*\|^2 - 2\gamma(f(\alpha^{(k)}) - f(\alpha^*)) + 2\gamma^2 L(f(\alpha^{(k)}) - f(\alpha^{(k+1)}))$
-令 $\gamma = 1/L$，化简得：
-$\|\alpha^{(k+1)} - \alpha^*\|^2 \leq \|\alpha^{(k)} - \alpha^*\|^2 - \frac{2}{L}(f(\alpha^{(k)}) - f(\alpha^*)) + \frac{2}{L}(f(\alpha^{(k)}) - f(\alpha^{(k+1)}))$
-将 $f(\alpha^{(k)}) - f(\alpha^{(k+1)})$ 移项，并利用 $f(\alpha^*) \leq f(\alpha^{(k+1)})$，得到：
-$f(\alpha^{(k)}) - f(\alpha^*) \leq \frac{L}{2} \left( \|\alpha^{(k)} - \alpha^*\|^2 - \|\alpha^{(k+1)} - \alpha^*\|^2 \right)$
-将 $k$ 从 $0$ 累加到 $k-1$（裂项求和）：
-$\sum_{i=0}^{k-1} (f(\alpha^{(i)}) - f(\alpha^*)) \leq \frac{L}{2} \left( \|\alpha^{(0)} - \alpha^*\|^2 - \|\alpha^{(k)} - \alpha^*\|^2 \right) \leq \frac{L}{2}\|\alpha^{(0)} - \alpha^*\|^2$
-因为 $f(\alpha^{(k)})$ 是单调递减的（由下降引理），所以 $f(\alpha^{(k)}) - f(\alpha^*)$ 是序列中最小的：
-$k(f(\alpha^{(k)}) - f(\alpha^*)) \leq \sum_{i=0}^{k-1} (f(\alpha^{(i)}) - f(\alpha^*)) \leq \frac{L}{2}\|\alpha^{(0)} - \alpha^*\|^2$
-两边除以 $k$，即得证 $f(\alpha^{(k)}) - f(\alpha^*) \leq \frac{L}{2k}\|\alpha^{(0)} - \alpha^*\|^2$。
+**证明**
+由三角不等式及范数的齐次性$,\|\lambda\theta+(1-\lambda)\eta\|\leq\|\lambda\theta\|+\|(1-\lambda)\eta\|=\lambda\|\theta\|+(1-\lambda)\|\eta\|$。
 
----
+**※【推论】** 凸函数与线性映射的复合
+设 $F:\mathbb R^m\to\mathbb R$ 为凸函数$,A:\mathbb R^d\to\mathbb R^m$ 为线性映射，则 $G(\theta)=F(A\theta)$ 为凸函数。
 
-#### 2. 强凸且光滑函数的收敛性证明（$f$ 与 $x$ 均收敛）
+**证明**
+由 $A$ 的线性性和 $F$ 的凸性，对任意 $\theta,\eta\in\mathbb R^d$ 及 $\lambda\in[0,1]$，有
+$G(\lambda\theta+(1-\lambda)\eta)=F(\lambda A\theta+(1-\lambda)A\eta)\leq\lambda G(\theta)+(1-\lambda)G(\eta)$。
 
-**※【定理】** 强凸函数的梯度下降线性收敛性：假设 $f$ 是 $\eta$-强凸的，且梯度是 $L$-Lipschitz 的，学习率设为 $\gamma = \frac{1}{L}$。设 $\alpha^*$ 是唯一全局最小值点，则：
-$f(\alpha^{(k)}) - f(\alpha^*) \leq \left(1 - \frac{\eta}{L}\right)^k (f(\alpha^{(0)}) - f(\alpha^*))$ (1.15)
-$\|\alpha^{(k)} - \alpha^*\|^2 \leq \left(1 - \frac{\eta}{L}\right)^k \|\alpha^{(0)} - \alpha^*\|^2$ (1.16)
-这表明**函数值 $f(x)$ 和参数 $x$ 均以线性速率收敛**，需要 $k = O(\log(1/\varepsilon))$ 步即可达到误差 $\varepsilon$。
+**※【命题】** 可微凸函数的一阶最优性条件(First-order Optimality Condition)
+设 $F:\mathbb R^d\to\mathbb R$ 为可微凸函数，则 $\theta^*\in\arg\min_{\theta\in\mathbb R^d}F(\theta)\iff\nabla F(\theta^*)=0$。
 
-**证明**：
-由强凸定义：$f(p) \geq f(\alpha) + \langle \nabla f(\alpha), p - \alpha \rangle + \frac{\eta}{2}\|p - \alpha\|^2$。
-在最优解 $\alpha^*$ 处，梯度为 0。代入 $p = \alpha^*$，$\alpha = \alpha^{(k)}$：
-$f(\alpha^*) \geq f(\alpha^{(k)}) + \langle \nabla f(\alpha^{(k)}), \alpha^* - \alpha^{(k)} \rangle + \frac{\eta}{2}\|\alpha^* - \alpha^{(k)}\|^2$
-由此可以得到函数值误差的下界与参数误差的关系。为了更直接地证明，我们对强凸的二次下界（令 $p=\alpha^*$）求导可知，强凸性等价于：
-$f(\alpha^{(k)}) - f(\alpha^*) \leq \langle \nabla f(\alpha^{(k)}), \alpha^{(k)} - \alpha^* \rangle - \frac{\eta}{2}\|\alpha^{(k)} - \alpha^*\|^2$
-结合凸性，我们有：
-$f(\alpha^{(k)}) - f(\alpha^*) \leq \frac{1}{2\eta}\|\nabla f(\alpha^{(k)})\|^2$ (1.17) （通过对二次函数求极小值得到）
-将式 1.17 代入下降引理（式 1.12）：
-$f(\alpha^{(k+1)}) \leq f(\alpha^{(k)}) - \frac{1}{2L}\|\nabla f(\alpha^{(k)})\|^2 \leq f(\alpha^{(k)}) - \frac{\eta}{L}(f(\alpha^{(k)}) - f(\alpha^*))$
-移项得：
-$f(\alpha^{(k+1)}) - f(\alpha^*) \leq \left(1 - \frac{\eta}{L}\right) (f(\alpha^{(k)}) - f(\alpha^*))$
-递推 $k$ 次即得式 1.15：**$f(x)$ 以线性速率收敛**。
+**证明**
+必要性：若 $\theta^*$ 为无约束全局最优点，由费马定理(Fermat's theorem)得 $\nabla F(\theta^*)=0$。
+充分性：若 $\nabla F(\theta^*)=0$，由一阶判别法，对任意 $\theta$ 有 $F(\theta)\geq F(\theta^*)+\nabla F(\theta^*)^T(\theta-\theta^*)=F(\theta^*)$，故 $\theta^*$ 为全局最优点。
 
-对于参数 $x$ 的收敛性，回到式 1.14：
-$\|\alpha^{(k+1)} - \alpha^*\|^2 \leq \|\alpha^{(k)} - \alpha^*\|^2 - 2\gamma(f(\alpha^{(k)}) - f(\alpha^*)) + \gamma^2\|\nabla f(\alpha^{(k)})\|^2$
-由于强凸性，有 $f(\alpha^{(k)}) - f(\alpha^*) \geq \frac{\eta}{2}\|\alpha^{(k)} - \alpha^*\|^2$，并且 $\|\nabla f(\alpha^{(k)})\|^2 \leq 2L(f(\alpha^{(k)}) - f(\alpha^*))$。代入得：
-$\|\alpha^{(k+1)} - \alpha^*\|^2 \leq \|\alpha^{(k)} - \alpha^*\|^2 - 2\gamma(1 - \gamma L)(f(\alpha^{(k)}) - f(\alpha^*))$
-代入 $\gamma = 1/L$ 和 $f(\alpha^{(k)}) - f(\alpha^*) \geq \frac{\eta}{2}\|\alpha^{(k)} - \alpha^*\|^2$：
-$\|\alpha^{(k+1)} - \alpha^*\|^2 \leq \|\alpha^{(k)} - \alpha^*\|^2 - \frac{1}{L}\eta\|\alpha^{(k)} - \alpha^*\|^2 = \left(1 - \frac{\eta}{L}\right) \|\alpha^{(k)} - \alpha^*\|^2$
-递推 $k$ 次即得式 1.16：**$x$ 以线性速率收敛**。
+## 强凸与光滑收敛（Strong Convexity and Smooth Convergence）
 
----
+### 强凸函数（Strongly Convex Function）
 
-**※【例题】** 最小二乘法的梯度下降收敛性
-考虑目标函数 $f(\alpha) = \|A\alpha - b\|_2^2$（为了方便，假设没有系数 1/2）。矩阵 $A$ 的 Hessian 为 $\nabla^2 f = 2A^T A$。假设 $A$ 列满秩，其特征值为 $0 < \lambda_{min} \leq \ldots \leq \lambda_{max}$。
-则该函数的强凸参数 $\eta = 2\lambda_{min}$，Lipschitz 参数 $L = 2\lambda_{max}$。
-根据定理，若取学习率 $\gamma = \frac{1}{L} = \frac{1}{2\lambda_{max}}$，梯度下降将以如下速率收敛：
-$\|\alpha^{(k)} - \alpha^*\|^2 \leq \left(1 - \frac{\lambda_{min}}{\lambda_{max}}\right)^k \|\alpha^{(0)} - \alpha^*\|^2$
-这里的 $\frac{\lambda_{max}}{\lambda_{min}}$ 就是矩阵 $A^T A$ 的**条件数(Condition Number)**。条件数越大（特征值分布越不均匀），$1 - \frac{1}{\text{条件数}}$ 越接近 1，收敛就越慢。这也解释了为什么在实际应用中，我们需要对特征进行**标准化(Standardization)**来改善条件数，从而加速梯度下降。
+**※【定义】** $\mu$-强凸函数（$\mu$-Strongly Convex）
+设 $\mu>0$。若对任意 $\theta,\eta\in\mathbb R^d$ 及 $\lambda\in[0,1]$，均有
+$\begin{aligned} F(\lambda\eta+(1-\lambda)\theta) \leq {}&\lambda F(\eta)+(1-\lambda)F(\theta)-\frac{\mu}{2}\lambda(1-\lambda) \|\eta-\theta\|_2^2, \end{aligned}$
+则称 $F$ 为 $\mu$-强凸函数。
+
+**※【定理】** 强凸函数的一阶判别法
+设 $F:\mathbb R^d\to\mathbb R$ 可微，则 $F$ 为 $\mu$-强凸函数，当且仅当对任意 $\theta,\eta\in\mathbb R^d$：
+$F(\eta)\geq F(\theta) +\nabla F(\theta)^T(\eta-\theta) +\frac{\mu}{2}|\eta-\theta|_2^2$.
+
+**※【定理】** 强凸函数的二阶判别法
+设 $F:\mathbb R^d\to\mathbb R$ 二阶可微，则 $F$ 为 $\mu$-强凸函数，当且仅当
+$\nabla^2F(\theta)\succeq\mu I, \quad \forall\theta\in\mathbb R^d$.
+
+**※【推论】** 凸函数加二次项得到强凸函数
+若 $F$ 为凸函数，则对任意 $\mu>0$，$G(\theta)=F(\theta)+\frac{\mu}{2}|\theta|_2^2$为 $\mu$-强凸函数。
+
+**证明**
+由凸函数定义：$F(\lambda\eta+(1-\lambda)\theta) \leq \lambda F(\eta)+(1-\lambda)F(\theta)$.
+另一方面，利用二次函数的恒等式：$\begin{aligned} &\|\lambda\eta+(1-\lambda)\theta\|_2^2=\lambda\|\eta\|_2^2+(1-\lambda)\|\theta\|_2^2 -\lambda(1-\lambda)\|\eta-\theta\|_2^2. \end{aligned}$
+两式相加，并乘以相应系数，即得 $G$ 满足 $\mu$-强凸定义。
+
+**※【推论】** 强凸函数的最优解唯一性
+若 $F$ 为 $\mu$-强凸函数，且存在最优解 $\theta^*\in\arg\min F$，则该最优解唯一。
+
+**证明**
+反设存在两个不同的最优解 $\theta_1^*,\theta_2^*$，满足 $F(\theta_1^*)=F(\theta_2^*)=F^*$.
+由强凸函数定义，取 $\lambda=\frac12$：
+$\begin{aligned} F\left(\frac{\theta_1^*+\theta_2^*}{2}\right) \leq {}&\frac12F(\theta_1^*)+\frac12F(\theta_2^*)-\frac{\mu}{8}|\theta_1^*-\theta_2^*|_2^2. \end{aligned}$
+由于 $\theta_1^*\neq\theta_2^*$，故 $F\left(\frac{\theta_1^*+\theta_2^*}{2}\right)<F^*$,
+与 $F^*$ 为全局最小值矛盾。因此最优解唯一。
+
+### Łojasiewicz 不等式
+
+**※【引理】** Łojasiewicz 不等式（Łojasiewicz Inequality）
+设 $F:\mathbb R^d\to\mathbb R$ 可微且为 $\mu$-强凸函数$,\mu>0$，
+并设 $\theta^*\in\arg\min F$，则对任意 $\theta\in\mathbb R^d$：$|\nabla F(\theta)|_2^2 \geq 2\mu\big(F(\theta)-F(\theta^*)\big)$.
+
+**证明**
+由强凸函数的一阶判别法：$\begin{aligned} F(\theta^*)\geq {}&F(\theta) +\nabla F(\theta)^T(\theta^*-\theta)+\frac{\mu}{2}|\theta^*-\theta|_2^2. \end{aligned}$
+固定 $\theta$，考虑关于 $y$ 的函数：$G(y)=\nabla F(\theta)^T(y-\theta) +\frac{\mu}{2}|y-\theta|_2^2+F(\theta)$.
+由上式，对任意 $y$ 均有 $F(y)\geq G(y)$，特别地：$F(\theta^*)\geq G(\theta^*)\geq\min_yG(y)$.
+对 $G(y)$ 求导：$\nabla_yG(y)=\nabla F(\theta)+\mu(y-\theta)$.
+令其为零，得到 $\hat y-\theta=-\frac{1}{\mu}\nabla F(\theta)$.
+代入 $G(y)$：$\begin{aligned} \min_yG(y) &=F(\theta)-\frac{1}{\mu}|\nabla F(\theta)|_2^2+\frac{1}{2\mu}|\nabla F(\theta)|_2^2=F(\theta)-\frac{1}{2\mu}|\nabla F(\theta)|_2^2. \end{aligned}$
+因此 $F(\theta^*)\geq F(\theta)-\frac{1}{2\mu}|\nabla F(\theta)|_2^2$.
+整理即得 $|\nabla F(\theta)|_2^2 \geq 2\mu(F(\theta)-F(\theta^*))$.
+
+### 光滑函数（Smooth Function）
+
+**※【定义】** $L$-光滑函数（$L$-Smooth Function）
+设 $F:\mathbb R^d\to\mathbb R$ 可微。若存在常数 $L>0$，使得对任意 $\theta,\eta\in\mathbb R^d$：
+$| F(\eta)-F(\theta) -\nabla F(\theta)^T(\eta-\theta)| \leq \frac{L}{2}\|\eta-\theta\|_2^2$, 则称 $F$ 为 $L$-光滑函数。
+
+**※【定理】** 光滑函数的一阶等价刻画
+$F$ 为 $L$-光滑函数，当且仅当其梯度满足 Lipschitz 连续性（Lipschitz Continuity），
+即 $\|\nabla F(\theta)-\nabla F(\eta)\|_2 \leq L\|\theta-\eta\|_2, \quad\forall\theta,\eta\in\mathbb R^d$.
+
+**※【定理】** 光滑函数的二阶判别法
+设 $F$ 二阶可微，则 $F$ 为 $L$-光滑函数，
+当且仅当 $-LI\preceq\nabla^2F(\theta)\preceq LI, \quad\forall\theta\in\mathbb R^d$. 
+若 $F$ 同时为凸函数，则进一步有 $0\preceq\nabla^2F(\theta)\preceq LI$.
+
+**※【性质】** 实对称矩阵的半正定判别
+设 $A\in\mathbb R^{d\times d}$ 为实对称矩阵，则 $A\succeq0 \iff x^TAx\geq0,\quad\forall x\in\mathbb R^d$.
+进一步，$A\succeq\mu I \iff x^TAx\geq\mu|x|_2^2, \quad\forall x\in\mathbb R^d$.
+其中 $\mu>0$ 时$,A$ 的最小特征值不小于 $\mu$。
+
+**※【引理】** 下降引理（Descent Lemma）
+若 $F$ 为 $L$-光滑函数，则对任意 $\theta,\eta\in\mathbb R^d$：$F(\eta)\leq F(\theta) +\nabla F(\theta)^T(\eta-\theta) +\frac{L}{2}\|\eta-\theta\|_2^2$.
+特别地，取 $\eta=\theta-\frac1L\nabla F(\theta)$, 得到 $F\left(\theta-\frac1L\nabla F(\theta)\right) \leq F(\theta)-\frac{1}{2L}\|\nabla F(\theta)\|_2^2$.
+
+**证明**
+直接由 $L$-光滑函数定义：
+$F(\eta)\leq F(\theta) +\nabla F(\theta)^T(\eta-\theta) +\frac{L}{2}|\eta-\theta|_2^2$.
+代入 $\eta=\theta-\frac1L\nabla F(\theta)$：
+$\begin{aligned} F(\eta) &\leq F(\theta)-\frac1L|\nabla F(\theta)|_2^2+\frac{L}{2}\frac1{L^2}|\nabla F(\theta)|_2^2=F(\theta)-\frac{1}{2L}|\nabla F(\theta)|_2^2\end{aligned}$.
+
+**※【推论】** 光滑函数的梯度范数与函数值差距
+若 $F$ 为 $L$-光滑函数，且存在全局最优解 $\theta^*$，则$|\nabla F(\theta)|_2^2 \leq 2L(F(\theta)-F(\theta^*))$.
+
+**证明**
+由下降引理：$F\left(\theta-\frac1L\nabla F(\theta)\right) \leq F(\theta)-\frac{1}{2L}|\nabla F(\theta)|_2^2$.
+又因为 $\theta^*$ 为全局最优点：$F(\theta^*)\leq F\left(\theta-\frac1L\nabla F(\theta)\right)$.
+因此 $F(\theta^*)\leq F(\theta) -\frac{1}{2L}|\nabla F(\theta)|_2^2$. 整理即得结论。
+
+## 梯度下降收敛性（Gradient Descent Convergence）
+
+### 强凸且光滑情形
+
+梯度下降法（Gradient Descent, GD）的迭代公式为 $\theta_t=\theta_{t-1}-\gamma\nabla F(\theta_{t-1})$,
+其中 $\gamma>0$ 为步长（Step Size）。
+
+**※【定理】** 强凸光滑函数的梯度下降收敛性
+设 $F:\mathbb R^d\to\mathbb R$ 为 $L$-光滑且 $\mu$-强凸函数，存在唯一全局最优解 $\theta^*$。
+取步长 $\gamma=\frac1L$, 并采用梯度下降迭代 $\theta_t=\theta_{t-1}-\frac1L\nabla F(\theta_{t-1})$,
+则对任意 $t\geq0$：
+$\begin{aligned} F(\theta_t)-F(\theta^*) &\leq \left(1-\frac{\mu}{L}\right)^t \frac L2\|\theta_0-\theta^*\|_2^2\leq \exp\left(-\frac{\mu}{L}t\right) \frac L2\|\theta_0-\theta^*\|_2^2\end{aligned}$.
+
+因此，若希望函数值误差满足 $F(\theta_t)-F(\theta^*)\leq\varepsilon$, 只需 $t\geq\frac L\mu \ln\left(\frac{L|\theta_0-\theta^*|_2^2}{2\varepsilon}\right)$.
+即迭代复杂度为 $O\left(\frac L\mu\log\frac1\varepsilon\right)$.
+
+**证明**
+首先，由梯度下降迭代公式：$\theta_t=\theta_{t-1}-\gamma\nabla F(\theta_{t-1})$,
+展开距离平方：$\begin{aligned} \|\theta_t-\theta^*\|_2^2 =\|\theta_{t-1}-\theta^*\|_2^2-2\gamma\nabla F(\theta_{t-1})^T (\theta_{t-1}-\theta^*)+\gamma^2\|\nabla F(\theta_{t-1})\|_2^2\end{aligned}$.
+
+由强凸函数的一阶判别法：
+$\begin{aligned} F(\theta^*)\geq{}& F(\theta_{t-1})+\nabla F(\theta_{t-1})^T (\theta^*-\theta_{t-1})+\frac{\mu}{2}|\theta_{t-1}-\theta^*|_2^2. \end{aligned}$
+
+整理得到
+$\begin{aligned} \nabla F(\theta_{t-1})^T (\theta_{t-1}-\theta^*) \geq{}&F(\theta_{t-1})-F(\theta^*)+\frac{\mu}{2}|\theta_{t-1}-\theta^*|_2^2. \end{aligned}$
+
+又由前述光滑性推论：
+$|\nabla F(\theta_{t-1})|_2^2 \leq 2L(F(\theta_{t-1})-F(\theta^*))$.
+
+代入距离平方展开式：
+$\begin{aligned} |\theta_t-\theta^*|_2^2 \leq{}&(1-\mu\gamma) |\theta_{t-1}-\theta^*|_2^2-2\gamma(1-\gamma L) (F(\theta_{t-1})-F(\theta^*)). \end{aligned}$
+
+取 $\gamma=\frac1L$，第二项消失，得到
+$|\theta_t-\theta^*|_2^2 \leq \left(1-\frac{\mu}{L}\right) |\theta_{t-1}-\theta^*|_2^2$.
+
+递推可得 $|\theta_t-\theta^*|_2^2 \leq \left(1-\frac{\mu}{L}\right)^t |\theta_0-\theta^*|_2^2$.
+
+另一方面，由下降引理，以 $\theta^*$ 为展开点，且 $\nabla F(\theta^*)=0$：
+$F(\theta_t)-F(\theta^*) \leq\frac L2|\theta_t-\theta^*|_2^2$.
+
+因此 $F(\theta_t)-F(\theta^*) \leq \left(1-\frac{\mu}{L}\right)^t \frac L2|\theta_0-\theta^*|_2^2$.
+
+利用不等式 $1-x\leq e^{-x}$，得到 $F(\theta_t)-F(\theta^*) \leq e^{-\frac{\mu}{L}t} \frac L2|\theta_0-\theta^*|_2^2$.
+
+证毕。
+
+### 凸且光滑情形
+
+**※【定理】** 凸光滑函数的梯度下降收敛性
+
+设 $F:\mathbb R^d\to\mathbb R$ 为凸且 $L$-光滑函数，存在全局最优解 $\theta^*$。
+取步长 $\gamma=\frac1L$, 并采用梯度下降迭代 $\theta_t=\theta_{t-1}-\gamma\nabla F(\theta_{t-1})$,
+则对任意整数 $T\geq1$：$F(\theta_T)-F(\theta^*) \leq\frac{L|\theta_0-\theta^*|_2^2}{T}$.
+因此，若希望函数值误差满足 $F(\theta_T)-F(\theta^*)\leq\varepsilon$,
+只需 $T\geq\frac{L|\theta_0-\theta^*|_2^2}{\varepsilon}$. 即迭代复杂度为 $O(1/\varepsilon)$。
+
+**证明**
+首先，由梯度下降迭代公式：$\theta_t=\theta_{t-1}-\gamma\nabla F(\theta_{t-1})$,
+展开距离平方：
+$\begin{aligned} |\theta_t-\theta^*|_2^2 ={}&|\theta_{t-1}-\theta^*|_2^2-2\gamma\nabla F(\theta_{t-1})^T (\theta_{t-1}-\theta^*)+\gamma^2|\nabla F(\theta_{t-1})|_2^2. \end{aligned}$
+由凸函数的一阶判别法：$F(\theta^*)\geq F(\theta_{t-1}) +\nabla F(\theta_{t-1})^T (\theta^*-\theta_{t-1})$.
+因此$\nabla F(\theta_{t-1})^T (\theta_{t-1}-\theta^*) \geq F(\theta_{t-1})-F(\theta^*)$.
+代入距离平方展开式：$\begin{aligned} 2\gamma(F(\theta_{t-1})-F(\theta^*)) \leq{}& |\theta_{t-1}-\theta^*|_2^2-|\theta_t-\theta^*|_2^2+\gamma^2|\nabla F(\theta_{t-1})|_2^2 \end{aligned}$.
+由下降引理，取 $\gamma=1/L$：$F(\theta_t)\leq F(\theta_{t-1}) -\frac{\gamma}{2}|\nabla F(\theta_{t-1})|_2^2$.
+故 $\gamma^2|\nabla F(\theta_{t-1})|_2^2 \leq 2\gamma(F(\theta_{t-1})-F(\theta_t))$.
+代回并整理：$\begin{aligned} F(\theta_{t-1})-F(\theta^*) \leq{}& \frac{1}{2\gamma} \left( |\theta_{t-1}-\theta^*|_2^2 -|\theta_t-\theta^*|_2^2 \right)+F(\theta_{t-1})-F(\theta_t)\end{aligned}$.
+对 $t=1,\ldots,T$ 求和，利用望远镜求和（Telescoping Sum）：
+$\begin{aligned} &\sum_{t=0}^{T-1}(F(\theta_t)-F(\theta^*))\leq \frac{1}{2\gamma} \left(|\theta_0-\theta^*|_2^2 -|\theta_T-\theta^*|_2^2\right)+F(\theta_0)-F(\theta_T)\end{aligned}$.
+舍去非负项：$\begin{aligned} \sum_{t=0}^{T-1}(F(\theta_t)-F(\theta^*)) \leq{}& \frac{1}{2\gamma}|\theta_0-\theta^*|_2^2+F(\theta_0)-F(\theta_T)\end{aligned}$.
+
+由于梯度下降过程中函数值单调不增：$F(\theta_T)\leq F(\theta_t), \quad 0\leq t<T$.
+因此$T(F(\theta_T)-F(\theta^*)) \leq \sum_{t=0}^{T-1}(F(\theta_t)-F(\theta^*))$.
+又由下降引理，以 $\theta^*$ 为展开点：$F(\theta_0)-F(\theta^*) \leq\frac L2|\theta_0-\theta^*|_2^2$.
+取 $\gamma=1/L$，最终得到
+$\begin{aligned} T(F(\theta_T)-F(\theta^*)) &\leq \frac L2|\theta_0-\theta^*|_2^2+\frac L2|\theta_0-\theta^*|_2^2=L|\theta_0-\theta^*|_2^2\end{aligned}$.
+即 $F(\theta_T)-F(\theta^*) \leq\frac{L|\theta_0-\theta^*|_2^2}{T}$. $\square$.
 
 ## 6.4 拟合模型到数据(Fitting a Model to Data)
 
@@ -177,7 +439,7 @@ $\|\alpha^{(k)} - \alpha^*\|^2 \leq \left(1 - \frac{\lambda_{min}}{\lambda_{max}
 
 ### 6.4.1 回归的最小均方更新(Least Mean Squares Updates)
 
-以简单二次回归为例，参数 $k=3$，$\alpha = (\alpha_0, \alpha_1, \alpha_2)$，模型为 $M_\alpha(x_i) = \alpha_0 + \alpha_1 x_i + \alpha_2 x_i^2 = \langle \alpha, (1, x_i, x_i^2) \rangle$。
+以简单二次回归为例，参数 $k=3$$,\alpha = (\alpha_0, \alpha_1, \alpha_2)$，模型为 $M_\alpha(x_i) = \alpha_0 + \alpha_1 x_i + \alpha_2 x_i^2 = \langle \alpha, (1, x_i, x_i^2) \rangle$。
 对于单个数据点 $(x_1, y_1)$，代价 $f_1(\alpha) = (M_\alpha(x_1) - y_1)^2$。
 对 $\alpha_j$ 求偏导：$\frac{\mathrm{d}}{\mathrm{d}\alpha_j} f_1(\alpha) = 2(M_\alpha(x_1) - y_1) x_1^j$。
 梯度为：$\nabla f(\alpha) = 2(M_\alpha(x_1) - y_1)(1, x_1, x_1^2)$。

@@ -2,32 +2,41 @@
 
 **Figure 7.1:** 一个样条的例子。L型支架和圆圈代表固定物，阴影粗曲线代表在固定物约束下弯曲的木条。
 
-**※【定义】** 给定非负整数 $n, k$ 以及严格递增的序列 $(x_i)_{i=1}^N$ 划分区间 $[a, b]$：
-$a = x_1 < x_2 < \dots < x_N = b$ (7.1)
+**※【定义】** 网格，样条函数，节点
+给定非负整数 $n, k$ 以及严格递增的序列 $(x_i)_{i=1}^N$ 
+划分区间 $[a, b]$：$a = x_1 < x_2 < \dots < x_N = b$ (7.1)
 相对于该划分区间的 $n$ 次、$k$ 阶光滑类的样条函数(spline function)集合为：
 $\mathbb{S}_n^k = \{s: s \in \mathcal{C}^k[a, b]; \forall i \in [1, N-1], s|_{[x_i, x_{i+1}]} \in \mathbb{P}_n\}$ (7.2)
 $x_i$ 被称为样条的节点(knots)。
 
 **※【记号】** 在第6章和本章中，多项式次数均用 $n$ 表示。这里用 $N$ 表示样条的节点数量。
 
-**※【例题】** 作为一个极端情况，$\mathbb{S}_n^n = \mathbb{P}_n$，即 $s \in \mathbb{S}_n^n$ 的所有分段都属于同一个多项式。在另一端，$\mathbb{S}_1^0$ 是分段线性插值函数类。最流行的样条是 $\mathbb{S}_3^2$ 中的三次样条(cubic splines)，这也是本章的重点。
+**※【例题】** 
+作为一个极端情况，$\mathbb{S}_n^n = \mathbb{P}_n$，即 $s \in \mathbb{S}_n^n$ 的所有分段都属于同一个多项式。
+在另一端，$\mathbb{S}_1^0$ 是分段线性插值函数类。
+$\mathbb{S}_{3}^1$，Hermite差值，$\Pi_{\triangle}|_{[x_{i},x_{i+1}]}$ = 三次 Hermite 插值，故在每个节点上都连续可导。
+最流行的样条是 $\mathbb{S}_3^2$ 中的三次样条(cubic splines)，这也是本章的重点。但没有办法通过插值给出。
+$\mathbb{S}_{3}^3$，整体是一个三次多项式，在每个节点上都会要求所有系数是相同的。
+$\mathbb{S}_{n}^{n-1}$ maximally smooth spline
 
 ## 7.1 PP 形式样条(PP-form splines)
 
 ### 7.1.1 构造 PP 形式样条
 
-**※【引理】** 设 $m_i := s'(f; x_i)$ 表示 $s \in \mathbb{S}_3^2$ 在 $x_i$ 处的导数。则对于每个 $i = 2, 3, \dots, N-1$，有：
+**※【引理】** 设 $m_i := s'(f; x_i)$ 表示 $s \in \mathbb{S}_3^2$ 在 $x_i$ 处的导数。
+则对于每个 $i = 2, 3, \dots, N-1$，有：
 $\lambda_i m_{i-1} + 2 m_i + \mu_i m_{i+1} = 3\mu_i f[x_i, x_{i+1}] + 3\lambda_i f[x_{i-1}, x_i]$ (7.3)
-其中：
-$\mu_i = \frac{x_i - x_{i-1}}{x_{i+1} - x_{i-1}}, \quad \lambda_i = \frac{x_{i+1} - x_i}{x_{i+1} - x_{i-1}}$ (7.4)
+其中：$\mu_i = \frac{x_i - x_{i-1}}{x_{i+1} - x_{i-1}}, \quad \lambda_i = \frac{x_{i+1} - x_i}{x_{i+1} - x_{i-1}}$ (7.4)
 
-**证明**：记 $p_i(x) = s|_{[x_i, x_{i+1}]}$ 且 $K_i = f[x_i, x_{i+1}]$。埃尔米特插值问题 $p_i(x_i)=f_i, p_i(x_{i+1})=f_{i+1}, p_i'(x_i)=m_i, p_i'(x_{i+1})=m_{i+1}$ 的差商表可构造，由牛顿公式得：
+**证明**：记 $p_i(x) = s|_{[x_i, x_{i+1}]}$ 且 $K_i = f[x_i, x_{i+1}]$。
+埃尔米特插值问题 $p_i(x_i)=f_i, p_i(x_{i+1})=f_{i+1}, p_i'(x_i)=m_i, p_i'(x_{i+1})=m_{i+1}$ 的差商表可构造，由牛顿公式得：
 $p_i(x) = f_i + (x-x_i)m_i + (x-x_i)^2\frac{K_i - m_i}{x_{i+1}-x_i} + (x-x_i)^2(x-x_{i+1})\frac{m_i + m_{i+1} - 2K_i}{(x_{i+1}-x_i)^2}$ (7.5)
-等价地，多项式可写为 $p_i(x) = c_{i,0} + c_{i,1}(x-x_i) + c_{i,2}(x-x_i)^2 + c_{i,3}(x-x_i)^3$。由于 $s \in \mathcal{C}^2$ 意味着 $p_{i-1}''(x_i) = p_i''(x_i)$，即 $3c_{i-1,3}(x_i - x_{i-1}) = c_{i,2} - c_{i-1,2}$ (7.6)。代入系数化简即得 (7.3)。$\square$
+等价地，多项式可写为 $p_i(x) = c_{i,0} + c_{i,1}(x-x_i) + c_{i,2}(x-x_i)^2 + c_{i,3}(x-x_i)^3$。
+由于 $s \in \mathcal{C}^2$ 意味着 $p_{i-1}''(x_i) = p_i''(x_i)$，即 $3c_{i-1,3}(x_i - x_{i-1}) = c_{i,2} - c_{i-1,2}$ (7.6)。
+代入系数化简即得 (7.3)。$\square$
 
 **※【引理】** 记 $M_i = s''(f; x_i)$ 对于 $s \in \mathbb{S}_3^2$。则对于每个 $i = 2, 3, \dots, N-1$，有：
-$\mu_i M_{i-1} + 2 M_i + \lambda_i M_{i+1} = 6 f[x_{i-1}, x_i, x_{i+1}]$ (7.7)
-其中 $\mu_i$ 和 $\lambda_i$ 同上。
+$\mu_i M_{i-1} + 2 M_i + \lambda_i M_{i+1} = 6 f[x_{i-1}, x_i, x_{i+1}]$ (7.7) 其中 $\mu_i$ 和 $\lambda_i$ 同上。
 
 **证明**：$s(x)$ 在 $x_i$ 处的泰勒展开为 $s(x) = f_i + s'(x_i)(x-x_i) + \frac{M_i}{2}(x-x_i)^2 + \frac{s'''(x_i)}{6}(x-x_i)^3$ (7.8)。对 $x \in (x_i, x_{i+1}]$ 求二阶导并代入 $x_{i+1}$ 得 $s'''(x_i) = \frac{M_{i+1}-M_i}{x_{i+1}-x_i}$ (7.9)。代入 (7.8) 并令 $x=x_{i+1}$ 可得一阶导数表达式；同理处理左侧区间，两者相减即得 (7.7)。$\square$
 
@@ -37,6 +46,7 @@ $\mu_i M_{i-1} + 2 M_i + \lambda_i M_{i+1} = 6 f[x_{i-1}, x_i, x_{i+1}]$ (7.7)
 - **自然三次样条(natural cubic spline)**：满足 $s''(f; a) = 0$ 且 $s''(f; b) = 0$。
 - **非扭结三次样条(not-a-knot)**：满足 $s'''(f; x)$ 在 $x=x_2$ 和 $x=x_{N-1}$ 处存在。
 - **周期三次样条(periodic)**：用 $s(f; b) = s(f; a), s'(f; b) = s'(f; a)$ 和 $s''(f; b) = s''(f; a)$ 替代 $s(f; b) = f(b)$。
+- 夹持边界条件(clamped boundary condition)：$s'(a)=\upsilon_{0},s'(b)=\upsilon_{N}$.
 
 **※【引理】** 对于完备三次样条 $s \in \mathbb{S}_3^2$，记 $M_i = s''(f; x_i)$，有：
 $2M_1 + M_2 = 6f[x_1, x_1, x_2]$ (7.12)
@@ -48,6 +58,10 @@ $M_{N-1} + 2M_N = 6f[x_{N-1}, x_N, x_N]$ (7.13)
 
 **证明**：以完备三次样条为例，将所有方程 (7.3) 组装成线性系统 $A \mathbf{m} = \mathbf{b}$ (7.15)。由于 $\mu_i + \lambda_i = 1$，该矩阵是严格对角占优的，故非奇异，解唯一。$\square$
 
+**※【定义】** 严格对角占优
+
+**※【定理】** 严格对角占优是非奇异的
+
 **※【定理】** 确定唯一完备/自然/周期三次样条的线性算法的最大范数条件数不超过 $3$，与系统规模 $N$ 无关。
 **证明**：由 (7.4) 得 $\mu_i + \lambda_i = 1$，故 $\|A\|_\infty = 3$。同时 $\|A^{-1}\|_\infty \le 1$（由严格对角占优矩阵性质），两者相乘即为条件数。$\square$
 
@@ -56,8 +70,9 @@ $M_{N-1} + 2M_N = 6f[x_{N-1}, x_N, x_N]$ (7.13)
 
 ### 7.1.2 极小性质
 
-**※【定理】** 极小弯曲能量(Minimum bending energy)：对于任意满足 $g'(a)=f'(a), g'(b)=f'(b)$ 且 $g(x_i)=f(x_i)$ 的函数 $g \in \mathcal{C}^2[a, b]$，完备三次样条 $s = s(f; x)$ 满足：
-$\int_a^b [s''(x)]^2 \mathrm{d}x \le \int_a^b [g''(x)]^2 \mathrm{d}x$ (7.16)
+**※【定理】** 极小弯曲能量(Minimum bending energy)：
+对于任意满足 $g'(a)=f'(a), g'(b)=f'(b)$ 且 $g(x_i)=f(x_i)$ 的函数 $g \in \mathcal{C}^2[a, b]$，
+完备三次样条 $s = s(f; x)$ 满足：$\int_a^b [s''(x)]^2 \mathrm{d}x \le \int_a^b [g''(x)]^2 \mathrm{d}x$ (7.16)
 当且仅当 $g(x) = s(f; x)$ 时等号成立。
 
 **证明**：令 $\eta(x) = g(x) - s(x)$，则 $\eta \in \mathcal{C}^2[a,b]$，且 $\eta'(a)=\eta'(b)=0$，$\eta(x_i)=0$。将 $g'' = s'' + \eta''$ 代入积分，展开为三项。通过分部积分，交叉项 $\int s''\eta''$ 可以化为边界项与内部节点的求和，结合 $s^{(4)} \equiv 0$（由于是三次样条）及边界/节点条件，该交叉项为零，从而不等式成立。$\square$
@@ -69,9 +84,12 @@ $\forall x \in [a, b], \quad |s''(x)| \le 3 \max_{x \in [a, b]} |f''(x)|$ (7.18)
 
 ### 7.1.3 误差分析
 
-**※【定理】** 设 $f \in \mathcal{C}^2([a, b]) \cap \mathcal{C}^4([a, b] \setminus X_b)$ 被完备三次样条或端点指定二阶导数的三次样条插值，则：
-$|f^{(j)}(x) - s^{(j)}(x)| \le c_j h^{4-j} \max_{\xi \in [a, b] \setminus X_b} |f^{(4)}(\xi)|$ (7.20)
+**※【定理】** 设 $f \in \mathcal{C}^2([a, b]) \cap \mathcal{C}^4([a, b] \setminus X_b)$ 被完备三次样条或端点指定二阶导数的三次样条插值，则：$|f^{(j)}(x) - s^{(j)}(x)| \le c_j h^{4-j} \max_{\xi \in [a, b] \setminus X_b} |f^{(4)}(\xi)|$ (7.20)
 对于 $j=0,1,2$，其中 $c_0 = 1/16$，$c_1 = c_2 = 1/2$，$h = \max |x_{i+1} - x_i|$。
+
+**※【定义】** $|f|_{\omega^{2,\infty}} \stackrel{ \triangle}{ =}\|f^"\|_{\infty}$.
+
+**※【定义】** $w\in S_{1}^{\circ}(\triangle),\,w(x_{i})=f''(x_{i}),\,0\leq i\leq N$. $f''$ 分段拉格朗日差值
 
 ## 7.2 B 形式样条(B-form splines)
 

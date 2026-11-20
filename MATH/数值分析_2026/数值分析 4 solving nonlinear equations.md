@@ -169,12 +169,11 @@ $x_{n+1} = x_n - f(x_n)\frac{x_n - x_{n-1}}{f(x_n) - f(x_{n-1})}, \quad n \in \m
 13. end
 
 **※【定义】** 斐波那契数列(Fibonacci numbers)：
-序列 $\{F_n\}$ 定义为
-$F_0 = 0, F_1 = 1, \quad F_{n+1} = F_n + F_{n-1}$ (4.14)
+序列 $\{F_n\}$ 定义为 $F_0 = 0, F_1 = 1, \quad F_{n+1} = F_n + F_{n-1}$ (4.14)
 
 **※【定理】** 比内公式(Binet's formula)：
-记黄金比例为 $r_0 = \frac{1+\sqrt{5}}{2}$，$r_1 = 1 - r_0 = \frac{1-\sqrt{5}}{2}$，则
-$F_n = \frac{r_0^n - r_1^n}{\sqrt{5}}$ (4.15)
+记黄金比例为 $r_0 = \frac{1+\sqrt{5}}{2}$，$r_1 = 1 - r_0 = \frac{1-\sqrt{5}}{2}$，
+则 $F_n = \frac{r_0^n - r_1^n}{\sqrt{5}}$ (4.15)
 
 **证明**：
 由定义 4.25，有 $\mathbf{u}_k := \begin{bmatrix} F_{k+1} \\ F_k \end{bmatrix} = A \begin{bmatrix} F_k \\ F_{k-1} \end{bmatrix}$，其中 $A := \begin{bmatrix} 1 & 1 \\ 1 & 0 \end{bmatrix}$。故 $\mathbf{u}_n = A^n \mathbf{u}_0$。
