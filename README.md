@@ -137,10 +137,10 @@
 
 ### 文献阅读
 
-- [【文献阅读 】Attention is all you need](<CS/文献阅读/【文献阅读%20】Attention%20is%20all%20you%20need.md>)
-- [【文献阅读 】Financial Time Series Forecasting using CNN and Transformer](<CS/文献阅读/【文献阅读%20】Financial%20Time%20Series%20Forecasting%20using%20CNN%20and%20Transformer.md>)
-- [【文献阅读】Chain-of-Alpha](CS/文献阅读/【文献阅读】Chain-of-Alpha.md)
-- [【文献阅读】Navigating the Alpha Jungle](<CS/文献阅读/【文献阅读】Navigating%20the%20Alpha%20Jungle.md>)
+- [【文献阅读 】Attention is all you need](<【文献阅读 】Attention is all you need.md>)
+- [【文献阅读 】Financial Time Series Forecasting using CNN and Transformer](<【文献阅读 】Financial Time Series Forecasting using CNN and Transformer.md>)
+- [文献阅读 Chain-of-Alpha](文献阅读%20Chain-of-Alpha.md)
+- [文献阅读 Navigating the Alpha Jungle](<文献阅读 Navigating the Alpha Jungle.md>)
 
 ### 杂项
 

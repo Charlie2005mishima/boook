@@ -208,8 +208,6 @@ $F(\theta_t) - F(\theta^\star) = \frac{1}{2} \sum_{i=1}^d g(\lambda_i) |q_i^T(\t
 因为 $Q$ 是正交矩阵$,\sum_{i=1}^d |q_i^T(\theta_0 - \theta^\star)|^2 = \|\theta_0 - \theta^\star\|_2^2$。
 所以：$F(\theta_t) - F(\theta^\star) \leq \frac{1}{4\gamma t} \|\theta_0 - \theta^\star\|_2^2$.
 
----
-
 **※【例题】** 为什么 $\mu=0$ 时只能达到 $O(1/t)$？
 考虑一维函数 $F(\theta) = \theta^2$，但这是受限数据下的特例。假设 $H=0$，即目标函数是常数 $F(\theta)=0$，那么梯度为0，不下降。
 我们看一个真正的奇异矩阵例子：假设 $H = \begin{bmatrix} 0 & 0 \\ 0 & 1 \end{bmatrix}$，即 $F(\theta) = \frac{1}{2}\theta_2^2$。最优解集是 $\theta^\star = (c, 0)$，其中 $c$ 为任意常数。
@@ -433,27 +431,134 @@ $\begin{aligned} &\sum_{t=0}^{T-1}(F(\theta_t)-F(\theta^\star))\leq \frac{1}{2\g
 $\begin{aligned} T(F(\theta_T)-F(\theta^\star)) &\leq \frac L2|\theta_0-\theta^\star|_2^2+\frac L2|\theta_0-\theta^\star|_2^2=L|\theta_0-\theta^\star|_2^2\end{aligned}$.
 即 $F(\theta_T)-F(\theta^\star) \leq\frac{L|\theta_0-\theta^\star|_2^2}{T}$. $\square$.
 
-## 6.4 拟合模型到数据(Fitting a Model to Data)
+## §6.4 拟合模型到数据（Fitting a Model to Data）
 
-在数据分析中，梯度下降常用于将模型拟合到数据。给定数据集 $(X,y) = \{(x_1,y_1), \dots, (x_n,y_n)\}$ 和由参数 $\alpha$ 定义的模型族 $M_\alpha$，定义损失函数 $L((X,y), M_\alpha)$ 衡量预测值与真实值的差异。目标函数为 $f(\alpha) = L((X,y), M_\alpha)$。例如，可以使用误差平方和 $f(\alpha) = \mathrm{SSE} = \sum_{i=1}^n (y_i - M_\alpha(x_i))^2$ (6.1)。
+给定数据集 $Z={(x_i,y_i)}_{i=1}^n$，其中 $x_i\in\mathbb R^p$ 为输入，$y_i\in\mathbb R$ 为输出。
+设 $M_\alpha:\mathbb R^p\to\mathbb R$ 为由参数 $\alpha\in\mathbb R^k$ 确定的模型。
+通过损失函数（Loss Function）$L(Z,M_\alpha)$ 衡量模型预测与真实观测之间的差异，
+定义优化目标：$f(\alpha)=L(Z,M_\alpha)$
+模型拟合即求解：$\min_{\alpha\in\mathbb R^k}f(\alpha)$
 
-### 6.4.1 回归的最小均方更新(Least Mean Squares Updates)
+**※【定义】** 误差平方和（Sum of Squared Errors, SSE）
+对于回归问题，可以采用误差平方和作为损失函数：$f(\alpha)=\mathrm{SSE}=\sum_{i=1}^n(y_i-M_\alpha(x_i))^2$ (6.1)
+其中 $y_i-M_\alpha(x_i)$ 称为残差（Residual）。
+### §6.4.1 回归的最小均方更新（Least Mean Squares Updates）
 
-以简单二次回归为例，参数 $k=3$$,\alpha = (\alpha_0, \alpha_1, \alpha_2)$，模型为 $M_\alpha(x_i) = \alpha_0 + \alpha_1 x_i + \alpha_2 x_i^2 = \langle \alpha, (1, x_i, x_i^2) \rangle$。
-对于单个数据点 $(x_1, y_1)$，代价 $f_1(\alpha) = (M_\alpha(x_1) - y_1)^2$。
-对 $\alpha_j$ 求偏导：$\frac{\mathrm{d}}{\mathrm{d}\alpha_j} f_1(\alpha) = 2(M_\alpha(x_1) - y_1) x_1^j$。
-梯度为：$\nabla f(\alpha) = 2(M_\alpha(x_1) - y_1)(1, x_1, x_1^2)$。
-按照 $\alpha := \alpha - \gamma \nabla f(\alpha)$ 进行更新，这被称为**最小均方(Least Mean Squares, LMS)** 更新规则或 **Widrow-Hoff 学习规则**。更新的幅度与残差 $(M_\alpha(x_1) - y_1)$ 成正比：误差大步伐大，误差小步伐小。
+考虑简单的二次多项式回归模型，参数维数 $k=3$：
+$\alpha=(\alpha_0,\alpha_1,\alpha_2)^T$
+$M_\alpha(x)=\alpha_0+\alpha_1x+\alpha_2x^2$
+定义特征映射（Feature Map）：$\phi(x)=(1,x,x^2)^T$
+则模型可以写为内积形式：$M_\alpha(x)=\langle\alpha,\phi(x)\rangle=\alpha^T\phi(x)$
 
-### 6.4.2 可分解函数(Decomposable Functions)
+**※【例题】** 单个数据点的最小均方更新
+给定单个数据点 $(x_1,y_1)$，定义目标函数：$f_1(\alpha)=(M_\alpha(x_1)-y_1)^2$
+对参数 $\alpha_j$ 求偏导，其中 $j=0,1,2$：$\frac{\partial f_1(\alpha)}{\partial\alpha_j}=2(M_\alpha(x_1)-y_1)x_1^j$
+因此梯度为：$\nabla f_1(\alpha)=2(M_\alpha(x_1)-y_1)\phi(x_1)$
+展开可得：$\nabla f_1(\alpha)=2(M_\alpha(x_1)-y_1)(1,x_1,x_1^2)^T$
+采用梯度下降（Gradient Descent, GD）更新：$\alpha_{t+1}=\alpha_t-\gamma_t\nabla f_1(\alpha_t)$
+即：$\alpha_{t+1}=\alpha_t-2\gamma_t(M_{\alpha_t}(x_1)-y_1)\phi(x_1)$
+这一更新称为最小均方更新规则（Least Mean Squares, LMS），也称 Widrow–Hoff 学习规则（Widrow–Hoff Learning Rule）。
+更新幅度与预测残差成正比：残差较大时，梯度较大；残差接近零时，更新幅度也趋近于零。
 
-当有多个数据点 $n > 1$ 时，利用代价函数的可分解性：$f(\alpha) = \sum_{i=1}^n f_i(\alpha)$。由于每个 $f_i$ 是凸的，它们的和 $f$ 也是凸的（如果特征向量满秩，通常是强凸的）。
-**批量梯度下降(Batch Gradient Descent)**：
-直接扩展单点的情况，利用导数的线性性质：
-$\nabla f(\alpha) = 2 \sum_{i=1}^n (M_\alpha(x_i) - y_i) (1, x_i, x_i^2)$。
-此方法每步需计算所有 $n$ 个数据点的梯度，时间复杂度为 $O(n)$，对于大数据集较慢。
+**※【性质】** 最小均方更新的几何意义
+设残差为 $r_i=M_\alpha(x_i)-y_i$，则单点梯度为：$\nabla f_i(\alpha)=2r_i\phi(x_i)$
+因此负梯度方向为 $-2r_i\phi(x_i)$：
+- 当 $r_i>0$，即预测值偏高时，更新沿 $-\phi(x_i)$ 方向进行。
+- 当 $r_i<0$，即预测值偏低时，更新沿 $\phi(x_i)$ 方向进行。
+- 当 $r_i=0$，该数据点对应的梯度为零。
 
-**随机与增量梯度下降(Stochastic and Incremental Gradient Descent)**：
-为了避免每步计算全量梯度，**增量梯度下降**每次只计算一个数据点 $i$ 的梯度 $\nabla f_i(\alpha) = 2(M_\alpha(x_i) - y_i)(1, x_i, x_i^2)$。
-更常见的变体是**随机梯度下降(Stochastic Gradient Descent, SGD)**：每次随机选择一个数据点计算梯度并更新。
-在超大数据集上，这比批量方法快得多，因为每次迭代只需常数时间。虽然它不能完美继承凸函数的收敛保证，但在远离最优解时收敛很快；在接近最优解时可能不会精确收敛，但能通过 PAC 风格的随机保证达到足够接近的最优点。对于极大数据集，往往在算法使用完所有数据点之前就已经收敛。
+对于固定特征向量，模型在负梯度方向上的预测值会向真实值移动。
+
+**※【例题】** 多个数据点的矩阵表示
+设有 $n$ 个观测，定义设计矩阵（Design Matrix）：$\Phi=\begin{pmatrix}\phi(x_1)^T\\\phi(x_2)^T\\\vdots\\\phi(x_n)^T\end{pmatrix}\in\mathbb R^{n\times k}$.
+以及观测向量：$y=(y_1,\ldots,y_n)^T\in\mathbb R^n$.
+则误差平方和可以写为：$f(\alpha)=|\Phi\alpha-y|_2^2$.
+其梯度为：$\nabla f(\alpha)=2\Phi^T(\Phi\alpha-y)$.
+Hessian 矩阵为：$\nabla^2f(\alpha)=2\Phi^T\Phi$.
+由于对任意 $v\in\mathbb R^k$：$v^T\nabla^2f(\alpha)v=2|\Phi v|_2^2\geq0$. 因此 $f$ 为凸函数。
+
+若 $\Phi$ 列满秩，则 $\Phi^T\Phi$ 正定，从而 $f$ 为强凸函数，其强凸参数可取：$\mu=2\lambda_{\min}(\Phi^T\Phi)>0$
+此时最小二乘解唯一，满足正规方程（Normal Equations）：$\Phi^T\Phi\alpha^*=\Phi^Ty$.
+因此：$\alpha^*=(\Phi^T\Phi)^{-1}\Phi^Ty$. 若 $\Phi$ 不列满秩，则目标函数仍为凸函数，但不具有全局强凸性，最优解不一定唯一。
+
+### §6.4.2 可分解函数（Decomposable Functions）
+
+**※【定义】** 可分解目标函数
+若目标函数可以表示为各个样本损失之和：$f(\alpha)=\sum_{i=1}^nf_i(\alpha)$.则称其具有可分解结构（Decomposable Structure）。
+
+对于平方误差损失：$f_i(\alpha)=(M_\alpha(x_i)-y_i)^2$. 由于每个 $f_i$ 均为凸函数，因此其和 $f$ 也是凸函数。
+在大规模数据集上，通常采用平均经验损失（Empirical Risk）：$F(\alpha)=\frac1n\sum_{i=1}^nf_i(\alpha)$.
+最小化 $F$ 与最小化 $f$ 具有相同的最优解，但梯度相差常数因子 $n$。
+为了使更新公式更加统一，以下采用平均经验损失 $F$。
+
+**※【定义】** 批量梯度下降（Batch Gradient Descent, BGD）
+批量梯度下降在每次迭代中使用整个数据集计算梯度：$\nabla F(\alpha)=\frac1n\sum_{i=1}^n\nabla f_i(\alpha)$
+更新规则为：$\alpha_{t+1}=\alpha_t-\gamma_t\frac1n\sum_{i=1}^n\nabla f_i(\alpha_t)$
+对于二次回归：$\nabla f_i(\alpha)=2(M_\alpha(x_i)-y_i)\phi(x_i)$
+因此：$\alpha_{t+1}=\alpha_t-\frac{2\gamma_t}{n}\sum_{i=1}^n(M_{\alpha_t}(x_i)-y_i)\phi(x_i)$
+其矩阵形式为：$\alpha_{t+1}=\alpha_t-\frac{2\gamma_t}{n}\Phi^T(\Phi\alpha_t-y)$
+每次迭代均需要遍历所有样本。对于固定参数维数 $k$，一次梯度计算的时间复杂度为 $O(n)$；一般情况下为 $O(nk)$。
+
+**※【定义】** 增量梯度下降（Incremental Gradient Descent, IGD）
+增量梯度下降在每次迭代中仅选择一个样本，
+利用其损失函数的梯度更新参数：$\alpha_{t+1}=\alpha_t-\gamma_t\nabla f_{i_t}(\alpha_t)$
+其中 $i_t$ 按预先确定的次序选取，例如循环遍历全部数据点。
+
+对于平方误差：$\alpha_{t+1}=\alpha_t-2\gamma_t(M_{\alpha_t}(x_{i_t})-y_{i_t})\phi(x_{i_t})$
+
+**※【定义】** 随机梯度下降（Stochastic Gradient Descent, SGD）
+随机梯度下降每次随机抽取一个样本索引 $i_t$，计算单样本梯度并更新：$\alpha_{t+1}=\alpha_t-\gamma_t\nabla f_{i_t}(\alpha_t)$
+若 $i_t$ 在 ${1,\ldots,n}$ 上独立均匀抽样，则有：$\mathbb E_{i_t}[\nabla f_{i_t}(\alpha)]=\frac1n\sum_{i=1}^n\nabla f_i(\alpha)=\nabla F(\alpha)$
+因此，**SGD 的单样本梯度是完整平均梯度的无偏估计**。
+
+对于单点平方误差采用标准化损失：$\ell_i(\alpha)=\frac12(\alpha^T\phi(x_i)-y_i)^2$
+则：$\nabla\ell_i(\alpha)=(\alpha^T\phi(x_i)-y_i)\phi(x_i)$
+对应的 SGD 更新为：$\alpha_{t+1}=\alpha_t-\gamma_t(\alpha_t^T\phi(x_{i_t})-y_{i_t})\phi(x_{i_t})$
+其中因子 $1/2$ 用于消去求导产生的系数 $2$，不改变最优解。
+
+**※【性质】** 批量、增量与随机梯度下降的区别
+
+|方法|每次使用的样本|梯度性质|单步计算量|
+|---|---|---|---|
+|BGD|全部 $n$ 个样本|精确全梯度|$O(nk)$|
+|IGD|一个按固定次序选取的样本|单样本梯度|$O(k)$|
+|SGD|一个随机样本|对平均梯度无偏|$O(k)$|
+
+其中 $k$ 为模型参数维数。
+
+SGD 的单次迭代成本较低，但由于使用随机梯度，迭代轨迹会产生随机波动。固定学习率下通常不能保证精确收敛到最优解；采用适当递减学习率和平均迭代点，可以建立期望意义下的收敛保证。
+
+### §6.4.3 随机梯度下降的收敛性（SGD Convergence）
+
+**※【定理】** 凸目标函数的随机梯度下降收敛性
+设 $F:\mathbb R^d\to\mathbb R$ 为凸函数，存在最优解 $\theta^*$。随机梯度下降迭代为：$\theta_{t+1}=\theta_t-\gamma_tg_t$
+其中 $g_t=\nabla f_{i_t}(\theta_t)$，并假设：
+1. 随机梯度无偏，即 $\mathbb E[g_t\mid\theta_t]=\nabla F(\theta_t)$。
+2. 随机梯度有界，即 $|g_t|_2\leq B$.
+3. 初始点满足 $|\theta_1-\theta^*|_2\leq D$。
+4. 学习率选为 $\gamma_t=\frac{D}{B\sqrt t}$，其中 $D,B>0$。
+
+定义加权平均迭代点：$\bar\theta_T=\frac{\sum_{t=1}^T\gamma_t\theta_t}{\sum_{t=1}^T\gamma_t}$.
+则有：$\mathbb E[F(\bar\theta_T)-F(\theta^*)]\leq\frac{D^2+B^2\sum_{t=1}^T\gamma_t^2}{2\sum_{t=1}^T\gamma_t}$.
+进一步：$\mathbb E[F(\bar\theta_T)-F(\theta^*)]=O\left(\frac{DB\log T}{\sqrt T}\right)$.
+即 SGD 在上述条件下具有期望意义下的次线性收敛保证。
+
+**证明**：
+由更新公式：$\theta_{t+1}=\theta_t-\gamma_tg_t$
+展开距离平方：$|\theta_{t+1}-\theta^\star |_2^2=|\theta_t-\theta^\star|_2^2-2\gamma_t\langle g_t,\theta_t-\theta^*\rangle+\gamma_t^2|g_t|_2^2$
+对随机索引 $i_t$ 取条件期望，利用无偏性：$\mathbb E[\langle g_t,\theta_t-\theta^\star\rangle\mid\theta_t]=\langle\nabla F(\theta_t),\theta_t-\theta^\star\rangle$
+由凸函数的一阶判别法：$\langle\nabla F(\theta_t),\theta_t-\theta^\star\rangle\geq F(\theta_t)-F(\theta^\star)$
+
+结合 $|g_t|_2^2\leq B^2$，得到：$\mathbb E[|\theta_{t+1}-\theta^\star|_2^2]\leq\mathbb E[|\theta_t-\theta^\star|_2^2]-2\gamma_t\mathbb E[F(\theta_t)-F(\theta^*)]+\gamma_t^2B^2$.
+整理：$2\gamma_t\mathbb E[F(\theta_t)-F(\theta^\star)]\leq\mathbb E[|\theta_t-\theta^\star|_2^2]-\mathbb E[|\theta_{t+1}-\theta^*|_2^2]+\gamma_t^2B^2$.
+对 $t=1,\ldots,T$ 求和，利用望远镜求和：$2\sum_{t=1}^T\gamma_t\mathbb E[F(\theta_t)-F(\theta^*)]\leq D^2+B^2\sum_{t=1}^T\gamma_t^2$.
+另一方面，由 Jensen 不等式及 $F$ 的凸性：$F(\bar\theta_T)\leq\frac{\sum_{t=1}^T\gamma_tF(\theta_t)}{\sum_{t=1}^T\gamma_t}$.
+因此 $\mathbb E[F(\bar\theta_T)-F(\theta^*)]\leq\frac{D^2+B^2\sum_{t=1}^T\gamma_t^2}{2\sum_{t=1}^T\gamma_t}$.
+取 $\gamma_t=D/(B\sqrt t)$，则：$\sum_{t=1}^T\gamma_t^2=\frac{D^2}{B^2}\sum_{t=1}^T\frac1t$.
+利用调和级数上界：$\sum_{t=1}^T\frac1t\leq1+\ln T$.
+以及：$\sum_{t=1}^T\frac1{\sqrt t}\geq\sqrt T$.
+可得：$\mathbb E[F(\bar\theta_T)-F(\theta^*)]\leq\frac{DB(2+\ln T)}{2\sqrt T}$.
+因此：$\mathbb E[F(\bar\theta_T)-F(\theta^*)]=O\left(\frac{DB\log T}{\sqrt T}\right)$.
+证毕。
+
+需要注意，该定理保证的是**加权平均迭代点的期望函数值误差**，而非每一个随机迭代点都单调下降或几乎必然具有同样的收敛速度。

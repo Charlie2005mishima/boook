@@ -9,7 +9,7 @@ Gram–Schmidt 正交化可将线性无关组化为标准正交组。若 $W$ 有
 对 $A\in\mathbb R^{m\times n}$，有 $\operatorname{Row}(A)^\perp=\ker A$、$\operatorname{Col}(A)^\perp=\ker A^T$。满列秩矩阵可作 QR 分解 $A=QR$，其中 $Q^TQ=I$、$R$ 为上三角矩阵；它常用于稳定地求解最小二乘问题。
 ### 93实方阵在实正交相似下的标准形
 实正规矩阵（$AA^T=A^TA$）可经实正交相似化为由 $1\times1$ 实块与 $\begin{pmatrix}a&-b\\b&a\end{pmatrix}$ 块组成的分块对角阵。正交相似保持内积、范数、迹、行列式与特征多项式。
-### 94实对称方阵的特征根*
+### 94实对称方阵的特征根
 谱定理：实对称矩阵 $A$ 存在正交矩阵 $Q$，使 $Q^TAQ=\operatorname{diag}(\lambda_1,\ldots,\lambda_n)$，且 $\lambda_i\in\mathbb R$。不同特征值的特征向量正交；正定性等价于全部特征值为正。
 
 正交矩阵 $Q$ 满足 $Q^TQ=I$，故 $Q^{-1}=Q^T$、$\det Q=\pm1$，并保持内积、长度和距离。注意谱定理的正确结论是 $Q^TAQ=\Lambda$，而不是一般地等于 $A$。

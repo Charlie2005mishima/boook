@@ -1,5 +1,4 @@
 
-
 > **论文**: Tang, Z., Chen, Z., Yang, J., Mai, J., Zheng, Y., Wang, K., Chen, J., & Lin, L. (2025). *AlphaAgent: LLM-Driven Alpha Mining with Regularized Exploration to Counteract Alpha Decay*. KDD 2025.
 > **角色**: 论文阅读小助手 | **目标**: 按行文顺序梳理行文脉络，制作学术阅读笔记。
 
